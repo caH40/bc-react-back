@@ -8,8 +8,9 @@ import { router } from './routes/routes.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
-app.use(cors());
+
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
