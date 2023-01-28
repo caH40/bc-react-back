@@ -8,19 +8,20 @@ import { router } from './routes/routes.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
+app.use(cors());
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
 app.use(express.static(path.resolve(__dirname, 'build')));
 app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
-// app.use(cors());
-app.use(
-	cors({
-		credentials: true,
-		origin: ['https://www.bike-caucasus.ru/', 'https://.bike-caucasus.ru/'],
-	})
-);
+
+// app.use(
+// 	cors({
+// 		credentials: true,
+// 		origin: ['https://www.bike-caucasus.ru/', 'https://.bike-caucasus.ru/'],
+// 	})
+// );
 
 const start = async () => {
 	try {
