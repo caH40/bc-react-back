@@ -11,6 +11,8 @@ const PORT = process.env.SERVER_PORT || 5000;
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static(path.resolve(__dirname, 'build/')));
+app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
 // app.use(express.static(path.resolve(__dirname, 'static/')));
 app.use(cors({ credentials: true, origin: process.env.FRONT }));
 
