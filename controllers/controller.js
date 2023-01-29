@@ -85,12 +85,12 @@ export function getTrek(req, res) {
 	}
 }
 
-export async function getScreenshot(req, res) {
+export async function getWebcam(req, res) {
 	try {
+		const { numberCam } = req.params;
 		res
 			.status(200)
-			.download(path.resolve(__dirname, 'images/screenshots/webcam5', 'webcam5.jpg'));
-		downloadImage();
+			.download(path.resolve(__dirname, 'images/screenshots/webcams', `webcam${numberCam}.jpg`));
 	} catch (error) {
 		console.log(error);
 		return res

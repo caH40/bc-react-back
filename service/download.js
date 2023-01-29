@@ -1,15 +1,12 @@
-import download from 'image-downloader';
-import path from 'path';
-
-const __dirname = path.resolve();
+import { saveWebcam } from './webcam.js';
 
 export async function downloadImage() {
 	try {
-		let options = {
-			url: `https://gw.cmo.sai.msu.ru/webcam5.jpg`,
-			dest: path.resolve(__dirname, 'images/screenshots/webcam5', 'webcam5.jpg'),
-		};
-		await download.image(options);
+		const numberWebcams = [1, 5, 6, 7];
+		const minuteInMilliseconds = 60000;
+		setInterval(async () => {
+			for (let value of numberWebcams) await saveWebcam(value);
+		}, minuteInMilliseconds);
 	} catch (error) {
 		console.log(error);
 	}

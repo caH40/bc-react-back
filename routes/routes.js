@@ -6,7 +6,7 @@ import {
 	getResults,
 	getResultsAthlete,
 	getTrek,
-	getScreenshot,
+	getWebcam,
 	getNews,
 	getNewsOne,
 	postLikes,
@@ -20,7 +20,7 @@ router.get('/events', getEvents);
 router.get('/results', getResults);
 router.get('/athlete/results', getResultsAthlete);
 router.get('/gettrek', getTrek);
-router.get('/screenshot', getScreenshot);
+router.get('/webcam/:numberCam', getWebcam);
 router.get('/news', getNews);
 router.get('/news/:newsId', getNewsOne);
 router.post('/likes', postLikes);
