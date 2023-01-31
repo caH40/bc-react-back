@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import { router } from './routes/routes.js';
 import { downloadImage } from './service/download.js';
+import { routerAuth } from './routes/authentication.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
+app.use('/api', routerAuth);
 app.use(express.static(path.resolve(__dirname, 'build')));
 app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
 
