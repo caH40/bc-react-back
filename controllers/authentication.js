@@ -54,20 +54,6 @@ export async function logout(req, res) {
 	}
 }
 
-export async function checkAuth(req, res) {
-	try {
-		const { authorization } = req.headers;
-		const accessToken = authorization.split(' ')[1];
-		const user = validateAccessToken(accessToken);
-		if (!user) return res.status(401).json({ message: 'Не авторизован' });
-		console.log({ userData });
-		res.status(201).json({ user });
-	} catch (error) {
-		console.log(error);
-		res.status(400).json({ message: 'Непредвиденная ошибка' });
-	}
-}
-
 export async function refresh(req, res) {
 	try {
 		const { refreshToken } = req.cookies;
@@ -79,5 +65,19 @@ export async function refresh(req, res) {
 	} catch (error) {
 		console.log(error);
 		res.status(401).json({ message: 'Не авторизован' });
+	}
+}
+
+export async function checkAuth(req, res) {
+	try {
+		const { authorization } = req.headers;
+		const accessToken = authorization.split(' ')[1];
+		const user = validateAccessToken(accessToken);
+		if (!user) return res.status(401).json({ message: 'Не авторизован' });
+
+		res.status(201).json({ user });
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'Непредвиденная ошибка' });
 	}
 }

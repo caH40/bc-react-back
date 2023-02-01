@@ -56,13 +56,3 @@ export function validateRefreshToken(token) {
 		console.log(error);
 	}
 }
-
-// export async function findRefreshToken(refreshToken) {
-// 	try {
-// 		const tokenDB = await Token.findOne({ refreshToken });
-
-// 		return tokenDB;
-// 	} catch (e) {
-// 		return null;
-// 	}
-// }
