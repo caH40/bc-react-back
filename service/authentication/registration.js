@@ -26,7 +26,7 @@ export async function registrationService(username, email, password) {
 		await saveToken(id, tokens.refreshToken);
 
 		const message = 'Регистрация прошла успешно';
-		return { ...tokens, user: username, email, id, message };
+		return { ...tokens, message, user: { username, email: username, id } };
 	} catch (error) {
 		console.log(error);
 		throw error;

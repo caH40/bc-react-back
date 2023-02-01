@@ -6,7 +6,7 @@ const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = process.env;
 
 export async function generateToken(payload) {
 	try {
-		const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '1d' });
+		const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '1m' });
 		const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '30d' });
 
 		return { accessToken, refreshToken };
@@ -39,23 +39,23 @@ export async function removeToken(refreshToken) {
 	}
 }
 
-// export function validateAccessToken(token) {
-// 	try {
-// 		const userData = jwt.verify(token, JWT_ACCESS_TOKEN);
-// 		return userData;
-// 	} catch (e) {
-// 		return null;
-// 	}
-// }
+export function validateAccessToken(token) {
+	try {
+		const userData = jwt.verify(token, JWT_ACCESS_SECRET);
+		return userData;
+	} catch (error) {
+		console.log(error);
+	}
+}
 
-// export function validateRefreshToken(token) {
-// 	try {
-// 		const userData = jwt.verify(token, JWT_REFRESH_TOKEN);
-// 		return userData;
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// }
+export function validateRefreshToken(token) {
+	try {
+		const userData = jwt.verify(token, JWT_REFRESH_SECRET);
+		return userData;
+	} catch (error) {
+		console.log(error);
+	}
+}
 
 // export async function findRefreshToken(refreshToken) {
 // 	try {

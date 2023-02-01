@@ -19,7 +19,7 @@ export async function authorizationService(username, password, refreshToken) {
 		await saveToken(userDB._id, tokens.refreshToken);
 
 		const message = 'Авторизация прошла успешно';
-		return { ...tokens, user: username, email: userDB.email, id: userDB._id, message };
+		return { ...tokens, message, user: { username, email: userDB.email, id: userDB._id } };
 	} catch (error) {
 		console.log(error);
 		throw error;

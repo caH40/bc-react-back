@@ -1,5 +1,8 @@
 import { authorizationService } from '../service/authentication/authorization.js';
+import { logoutService } from '../service/authentication/logout.js';
 import { registrationService } from '../service/authentication/registration.js';
+import { validateAccessToken } from '../service/authentication/token.js';
+import { refreshService } from '../service/authentication/refresh.js';
 
 export async function registration(req, res) {
 	try {
@@ -34,5 +37,47 @@ export async function authorization(req, res) {
 	} catch (error) {
 		console.log(error);
 		res.status(401).json('Непредвиденная ошибка');
+	}
+}
+
+export async function logout(req, res) {
+	try {
+		const { refreshToken } = req.cookies;
+
+		const token = await logoutService(refreshToken);
+
+		res.clearCookie('refreshToken');
+		res.status(201).json({ ...token });
+	} catch (error) {
+		console.log(error);
+		res.status(400).json('Непредвиденная ошибка');
+	}
+}
+
+export async function checkAuth(req, res) {
+	try {
+		const { authorization } = req.headers;
+		const accessToken = authorization.split(' ')[1];
+		const user = validateAccessToken(accessToken);
+		if (!user) return res.status(401).json({ message: 'Не авторизован' });
+		console.log({ userData });
+		res.status(201).json({ user });
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'Непредвиденная ошибка' });
+	}
+}
+
+export async function refresh(req, res) {
+	try {
+		const { refreshToken } = req.cookies;
+
+		const user = await refreshService(refreshToken);
+		if (!user) return res.status(401).json({ message: 'Не авторизован' });
+
+		res.status(201).json({ ...user });
+	} catch (error) {
+		console.log(error);
+		res.status(401).json({ message: 'Не авторизован' });
 	}
 }
