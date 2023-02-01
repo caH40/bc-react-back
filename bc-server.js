@@ -10,22 +10,21 @@ import { routerAuth } from './routes/authentication.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
+const originURL = process.env.FRONT;
 
 const app = express();
-app.use(cors());
+app.use(
+	cors({
+		credentials: true,
+		origin: originURL,
+	})
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', router);
 app.use('/api', routerAuth);
 app.use(express.static(path.resolve(__dirname, 'build')));
 app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
-
-// app.use(
-// 	cors({
-// 		credentials: true,
-// 		origin: ['https://www.bike-caucasus.ru/', 'https://.bike-caucasus.ru/'],
-// 	})
-// );
 
 const start = async () => {
 	try {

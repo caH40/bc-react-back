@@ -29,15 +29,16 @@ export async function saveToken(userId, refreshToken) {
 		console.log(error);
 	}
 }
-// export async function removeToken(refreshToken, next) {
-// 	try {
-// 		const tokenDB = await Token.findOneAndDelete({ refreshToken });
 
-// 		return tokenDB;
-// 	} catch (e) {
-// 		next(e);
-// 	}
-// }
+export async function removeToken(refreshToken) {
+	try {
+		const tokenDB = await Token.findOneAndDelete({ refreshToken });
+		return tokenDB;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 // export function validateAccessToken(token) {
 // 	try {
 // 		const userData = jwt.verify(token, JWT_ACCESS_TOKEN);
@@ -51,8 +52,8 @@ export async function saveToken(userId, refreshToken) {
 // 	try {
 // 		const userData = jwt.verify(token, JWT_REFRESH_TOKEN);
 // 		return userData;
-// 	} catch (e) {
-// 		return null;
+// 	} catch (error) {
+// 		console.log(error);
 // 	}
 // }
 
