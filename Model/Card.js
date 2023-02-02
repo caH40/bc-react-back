@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import pkg from 'mongoose';
 import Kudos from './Kudos.js';
-import User from './User.js';
+import { User } from './User.js';
 const { Schema, model } = pkg;
 
 const cardSchema = new Schema({
