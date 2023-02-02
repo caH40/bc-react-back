@@ -6,7 +6,7 @@ const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = process.env;
 
 export async function generateToken(payload) {
 	try {
-		const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '1m' });
+		const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '10s' });
 		const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '30d' });
 
 		return { accessToken, refreshToken };
@@ -44,7 +44,7 @@ export function validateAccessToken(token) {
 		const userData = jwt.verify(token, JWT_ACCESS_SECRET);
 		return userData;
 	} catch (error) {
-		console.log(error);
+		return;
 	}
 }
 
@@ -53,6 +53,6 @@ export function validateRefreshToken(token) {
 		const userData = jwt.verify(token, JWT_REFRESH_SECRET);
 		return userData;
 	} catch (error) {
-		console.log(error);
+		return;
 	}
 }

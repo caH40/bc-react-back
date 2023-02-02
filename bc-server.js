@@ -7,6 +7,7 @@ import path from 'path';
 import { router } from './routes/routes.js';
 import { downloadImage } from './service/download.js';
 import { routerAuth } from './routes/authentication.js';
+import { checkAuth } from './middleware/auth.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
@@ -25,6 +26,7 @@ app.use('/api', router);
 app.use('/api', routerAuth);
 app.use(express.static(path.resolve(__dirname, 'build')));
 app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
+app.use(checkAuth);
 
 const start = async () => {
 	try {

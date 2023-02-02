@@ -11,6 +11,7 @@ import {
 	getNewsOne,
 	postLikes,
 } from '../controllers/controller.js';
+import { checkAuth } from '../middleware/auth.js';
 
 export const router = new Router();
 
