@@ -11,13 +11,12 @@ import { checkAuth } from './middleware/auth.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
-const originURL = process.env.FRONT;
 
 const app = express();
 app.use(
 	cors({
 		credentials: true,
-		origin: originURL,
+		origin: 'https://www.bike-caucasus.ru',
 	})
 );
 app.use(express.json());
