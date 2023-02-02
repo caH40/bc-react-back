@@ -3,6 +3,7 @@ import { logoutService } from '../service/authentication/logout.js';
 import { registrationService } from '../service/authentication/registration.js';
 import { validateAccessToken } from '../service/authentication/token.js';
 import { refreshService } from '../service/authentication/refresh.js';
+import { confirmEmailService } from '../service/authentication/confirm-email.js';
 
 export async function registration(req, res) {
 	try {
@@ -76,6 +77,25 @@ export async function checkAuth(req, res) {
 		if (!user) return res.status(401).json({ message: 'Не авторизован' });
 
 		res.status(201).json({ user });
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'Непредвиденная ошибка' });
+	}
+}
+export async function confirmEmail(req, res) {
+	try {
+		const { token } = req.body;
+		const response = await confirmEmailService(token);
+		res.status(200).json(response);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'Непредвиденная ошибка' });
+	}
+}
+
+export async function resetPassword(req, res) {
+	try {
+		res.status(200).json();
 	} catch (error) {
 		console.log(error);
 		res.status(400).json({ message: 'Непредвиденная ошибка' });

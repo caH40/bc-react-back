@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { UserConfirm } from '../../Model/User-confirm.js';
 
 import { User } from '../../Model/User.js';
+import { mailService } from './nodemailer.js';
 import { generateToken, saveToken } from './token.js';
 
 export async function registrationService(username, email, password) {
@@ -18,15 +20,23 @@ export async function registrationService(username, email, password) {
 			username,
 			email,
 			password: hashPassword,
-			activationToken,
 		});
-		// const target = 'registration'; для отправки письма для активации
+
+		await UserConfirm.create({
+			userId: id,
+			date: Date.now(),
+			activationToken,
+			email,
+		});
+
+		const target = 'registration'; //для отправки письма для активации
+		const sendedMail = await mailService(target, activationToken, email, username, password);
 
 		const tokens = await generateToken({ username, email, id });
 		await saveToken(id, tokens.refreshToken);
 
 		const message = 'Регистрация прошла успешно';
-		return { ...tokens, message, user: { username, email: username, id } };
+		return { ...tokens, message, user: { username, email, id } };
 	} catch (error) {
 		console.log(error);
 		throw error;
