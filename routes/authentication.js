@@ -5,6 +5,7 @@ import {
 	logout,
 	checkAuth,
 	refresh,
+	confirmEmail,
 } from '../controllers/authentication.js';
 
 export const routerAuth = new Router();
@@ -14,3 +15,4 @@ routerAuth.post('/auth/authorization', authorization);
 routerAuth.post('/auth/logout', logout);
 routerAuth.get('/auth/check', checkAuth);
 routerAuth.post('/auth/refresh', refresh);
+routerAuth.post('/auth/confirm-email', confirmEmail);

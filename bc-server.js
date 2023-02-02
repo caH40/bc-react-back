@@ -8,6 +8,7 @@ import { router } from './routes/routes.js';
 import { downloadImage } from './service/download.js';
 import { routerAuth } from './routes/authentication.js';
 import { checkAuth } from './middleware/auth.js';
+import { timers } from './service/timer.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
@@ -16,7 +17,7 @@ const app = express();
 app.use(
 	cors({
 		credentials: true,
-		origin: 'https://www.bike-caucasus.ru',
+		origin: process.env.FRONT,
 	})
 );
 app.use(express.json());
@@ -37,6 +38,7 @@ const start = async () => {
 		app.listen(PORT, () => console.log('server started on PORT=' + PORT));
 
 		await downloadImage();
+		await timers();
 	} catch (e) {
 		console.log(e);
 	}
