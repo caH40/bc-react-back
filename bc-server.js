@@ -9,6 +9,7 @@ import { downloadImage } from './service/download.js';
 import { routerAuth } from './routes/authentication.js';
 import { checkAuth } from './middleware/auth.js';
 import { timers } from './service/timer.js';
+import { createSitemap } from './service/sitemap/generate-sitemap.js';
 
 const __dirname = path.resolve();
 const PORT = process.env.SERVER_PORT || 5000;
@@ -36,7 +37,7 @@ const start = async () => {
 			.catch(error => console.log(error));
 
 		app.listen(PORT, () => console.log('server started on PORT=' + PORT));
-
+		await createSitemap(); //вызывается только при запуске
 		await downloadImage();
 		await timers();
 	} catch (e) {
