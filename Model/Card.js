@@ -25,4 +25,4 @@ const cardSchema = new Schema({
 	dateEdit: { type: Number },
 });
 
-export default model('Card', cardSchema);
+export const Card = model('Card', cardSchema);

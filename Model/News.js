@@ -20,4 +20,4 @@ const newsSchema = new Schema({
 	dislikeUser: { type: Boolean },
 });
 
-export default model('News', newsSchema);
+export const News = model('News', newsSchema);

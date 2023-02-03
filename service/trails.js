@@ -1,4 +1,4 @@
-import Card from '../Model/Card.js';
+import { Card } from '../Model/Card.js';
 import Photo from '../Model/Photo.js';
 
 export async function getTrailsService(filter) {

@@ -1,5 +1,5 @@
 import Event from '../Model/Event.js';
-import Result from '../Model/Result.js';
+import { Result } from '../Model/Result.js';
 
 export async function getEventsService() {
 	try {
