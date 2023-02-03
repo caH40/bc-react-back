@@ -103,7 +103,7 @@ export async function resetPassword(req, res) {
 		res.status(200).json(response);
 	} catch (error) {
 		console.log(error);
-		res.status(400).json({ message: 'Непредвиденная ошибка' });
+		res.status(400).json(error);
 	}
 }
 

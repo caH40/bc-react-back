@@ -7,7 +7,7 @@ import { mailService } from './nodemailer.js';
 export async function resetPasswordService(email) {
 	try {
 		const userDB = await User.findOne({ email });
-		if (!userDB) return { message: 'e-mail не найден', status: 'wrong' };
+		if (!userDB) throw { message: 'e-mail не найден' };
 
 		const tokenReset = uuidv4();
 		const passwordResetDB = await PasswordReset.create({
@@ -22,7 +22,6 @@ export async function resetPasswordService(email) {
 
 		return { message: `Сброс пароля `, email };
 	} catch (error) {
-		console.log(error);
-		throw { message: `Ошибка при сбросе пароля` };
+		throw error;
 	}
 }
