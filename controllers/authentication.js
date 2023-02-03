@@ -4,6 +4,9 @@ import { registrationService } from '../service/authentication/registration.js';
 import { validateAccessToken } from '../service/authentication/token.js';
 import { refreshService } from '../service/authentication/refresh.js';
 import { confirmEmailService } from '../service/authentication/confirm-email.js';
+import { resetPasswordService } from '../service/authentication/reset-password.js';
+import { checkRequestPasswordService } from '../service/authentication/checkRequestPassword.js';
+import { newPasswordService } from '../service/authentication/new-password.js';
 
 export async function registration(req, res) {
 	try {
@@ -95,7 +98,31 @@ export async function confirmEmail(req, res) {
 
 export async function resetPassword(req, res) {
 	try {
-		res.status(200).json();
+		const { email } = req.body;
+		const response = await resetPasswordService(email);
+		res.status(200).json(response);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'Непредвиденная ошибка' });
+	}
+}
+
+export async function checkRequestPassword(req, res) {
+	try {
+		const { token } = req.body;
+		const response = await checkRequestPasswordService(token);
+		res.status(200).json(response);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: 'Непредвиденная ошибка' });
+	}
+}
+
+export async function newPassword(req, res) {
+	try {
+		const { userId, newPassword } = req.body;
+		const response = await newPasswordService(userId, newPassword);
+		res.status(201).json(response);
 	} catch (error) {
 		console.log(error);
 		res.status(400).json({ message: 'Непредвиденная ошибка' });

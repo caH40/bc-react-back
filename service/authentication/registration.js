@@ -14,7 +14,7 @@ export async function registrationService(username, email, password) {
 		if (checkEmail)
 			return { message: `Пользователь с "${email}" уже существует`, status: 'wrong' };
 
-		const hashPassword = await bcrypt.hash(password, 5);
+		const hashPassword = await bcrypt.hash(password, 10);
 		const activationToken = uuidv4();
 		const { _id: id } = await User.create({
 			username,

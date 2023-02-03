@@ -15,7 +15,7 @@ export async function refreshService(refreshToken) {
 
 		//обновляем данные пользователя если они изменились
 		const userDB = await User.findById(userFromToken.id);
-
+		if (!userDB) return;
 		const { accessToken } = await generateToken({
 			id: userDB._id,
 			email: userDB.email,

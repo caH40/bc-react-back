@@ -7,6 +7,8 @@ import {
 	refresh,
 	confirmEmail,
 	resetPassword,
+	checkRequestPassword,
+	newPassword,
 } from '../controllers/authentication.js';
 
 export const routerAuth = new Router();
@@ -18,3 +20,5 @@ routerAuth.get('/auth/check', checkAuth);
 routerAuth.post('/auth/refresh', refresh);
 routerAuth.post('/auth/confirm-email', confirmEmail);
 routerAuth.post('/auth/reset-password', resetPassword);
+routerAuth.post('/auth/check-request-password', checkRequestPassword);
+routerAuth.post('/auth/new-password', newPassword);
