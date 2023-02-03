@@ -4,6 +4,7 @@ import { registrationService } from '../service/authentication/registration.js';
 import { validateAccessToken } from '../service/authentication/token.js';
 import { refreshService } from '../service/authentication/refresh.js';
 import { confirmEmailService } from '../service/authentication/confirm-email.js';
+import { resetPasswordService } from '../service/authentication/reset-password.js';
 
 export async function registration(req, res) {
 	try {
@@ -95,7 +96,9 @@ export async function confirmEmail(req, res) {
 
 export async function resetPassword(req, res) {
 	try {
-		res.status(200).json();
+		const { email } = req.body;
+		const response = await resetPasswordService(email);
+		res.status(200).json(response);
 	} catch (error) {
 		console.log(error);
 		res.status(400).json({ message: 'Непредвиденная ошибка' });
