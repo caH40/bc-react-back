@@ -32,7 +32,7 @@ export async function mailService(target, token, email, username, password) {
 			subject = 'Сброс пароля на сайте bike-caucasus.ru';
 			html = `Здравствуйте!<br>
     ${date} был произведен запрос на сброс пароля для <b>${username}</b> на сайте bike-caucasus.ru, где был указан данный e-mail: <b>${email}</b>.<br>
-    Для сброса пароля перейдите по ссылке <a href="${FRONT}/password-reset?token=${token}">${FRONT}/password-reset/${token}</a> <br><br>
+    Для сброса пароля перейдите по ссылке <a href="${FRONT}/new-password/${token}">${FRONT}/password-reset/${token}</a> <br><br>
     <b>Внимание!</b> Ссылка действительна 72 часа. Если Вы не делали данного запроса, то просто проигнорируйте это письмо.<br><br>С уважением, команда Bike-Caucasus.`;
 		}
 		if (target === 'savedNewPassword') {

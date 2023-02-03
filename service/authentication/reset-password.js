@@ -10,7 +10,12 @@ export async function resetPasswordService(email) {
 		if (!userDB) return { message: 'e-mail не найден', status: 'wrong' };
 
 		const tokenReset = uuidv4();
-		const passwordResetDB = await PasswordReset.create({ email, tokenReset, date: Date.now() });
+		const passwordResetDB = await PasswordReset.create({
+			userId: userDB._id,
+			email,
+			tokenReset,
+			date: Date.now(),
+		});
 
 		const target = 'resetPassword';
 		await mailService(target, tokenReset, email, userDB.username);
