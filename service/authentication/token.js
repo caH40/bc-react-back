@@ -6,7 +6,7 @@ const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = process.env;
 
 export async function generateToken(payload) {
 	try {
-		const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '10s' });
+		const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '1d' });
 		const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '30d' });
 
 		return { accessToken, refreshToken };
