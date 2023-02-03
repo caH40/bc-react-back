@@ -1,22 +1,21 @@
-import PasswordReset from '../Model/Password-reset.js';
+import { PasswordReset } from '../../Model/Password-reset.js';
 
-export default async function () {
-  try {
-    const requestResetPassword = await PasswordReset.find();
-    const dateNow = new Date().getTime();
-    //48 часов на активацию нового аккаунта
-    const activationPeriod = 172800000;
+export async function controlNewPasswords() {
+	try {
+		const requestResetPassword = await PasswordReset.find();
+		const dateNow = Date.now();
 
-    const length = requestResetPassword.length;
-    for (let i = 0; i < length; i++) {
-      let expiration = dateNow - requestResetPassword[i].dateRequest;
-      if (expiration > activationPeriod) {
-        await PasswordReset.findOneAndDelete({
-          dateRequest: requestResetPassword[i].dateRequest,
-        });
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
+		const activationPeriod = 3 * 24 * 60 * 60 * 1000;
+
+		for (let i = 0; i < requestResetPassword.length; i++) {
+			let expiration = dateNow - requestResetPassword[i].date;
+			if (expiration > activationPeriod) {
+				await PasswordReset.findOneAndDelete({
+					date: requestResetPassword[i].date,
+				});
+			}
+		}
+	} catch (error) {
+		console.log(error);
+	}
 }
