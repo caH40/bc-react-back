@@ -1,3 +1,0 @@
-User-Agent: *
-Allow: /
-sitemap: https://bike-caucasus.ru/sitemap.xml
