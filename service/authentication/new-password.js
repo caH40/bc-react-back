@@ -1,8 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import { PasswordReset } from '../../Model/Password-reset.js';
-import { User } from '../../Model/User.js';
 import bcrypt from 'bcrypt';
+
+import { User } from '../../Model/User.js';
+import { mailService } from './nodemailer.js';
 
 export async function newPasswordService(userId, newPassword) {
 	try {
@@ -12,6 +11,8 @@ export async function newPasswordService(userId, newPassword) {
 			{ $set: { password: hashPassword } }
 		);
 		if (!userDB) throw { message: 'Ошибка при сохранении нового пароля!' };
+		const target = 'savedNewPassword';
+		mailService(target, 'нет токена', userDB.email, userDB.username, newPassword);
 		return { message: `Пароль изменен` };
 	} catch (error) {
 		throw error;
