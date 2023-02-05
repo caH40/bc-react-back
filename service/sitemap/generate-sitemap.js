@@ -29,6 +29,11 @@ export async function createSitemap() {
       <priority>0.9</priority>
       <changefreq>always</changefreq>
     </url>
+    <url>
+      <loc>https://bike-caucasus.ru/webcam/</loc>
+      <priority>0.5</priority>
+      <changefreq>always</changefreq>
+    </url>
     ${urlsTrails}
     ${urlsNews}
     ${urlsResults}
