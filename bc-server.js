@@ -37,7 +37,7 @@ const start = async () => {
 			.catch(error => console.log(error));
 
 		app.listen(PORT, () => console.log('server started on PORT=' + PORT));
-		await createSitemap(); //вызывается только при запуске
+		// await createSitemap(); //вызывается только при запуске
 		await downloadImage();
 		await timers();
 	} catch (e) {
