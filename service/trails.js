@@ -1,16 +1,18 @@
 import { Card } from '../Model/Card.js';
 import Photo from '../Model/Photo.js';
 
-export async function getTrailsService(filter) {
+export async function getTrailsService(filter, page = 1) {
 	try {
 		const cardsDB = await Card.find({ $and: [{ state: filter, bikeType: filter }] }).populate(
 			'kudoses'
 		);
+		const cardsOnPage = 10;
+		const cardsCurrentPage = cardsDB.slice(cardsOnPage * page - cardsOnPage, cardsOnPage * page);
 
-		const card = cardsDB.map(c => c.toObject());
+		const card = cardsCurrentPage.map(c => c.toObject());
 
-		for (let i = 0; i < cardsDB.length; i++) {
-			let likes = cardsDB[i].kudoses.usersIdLike.length - card[i].kudoses.usersIdDisLike.length;
+		for (let i = 0; i < card.length; i++) {
+			let likes = card[i].kudoses.usersIdLike.length - card[i].kudoses.usersIdDisLike.length;
 			card[i].likes = likes;
 		}
 		return { message: 'Карточки маршрутов получены', data: card };
