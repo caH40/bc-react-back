@@ -22,6 +22,6 @@ router.get('/results', getResults);
 router.get('/athlete/results', getResultsAthlete);
 router.get('/gettrek', getTrek);
 router.get('/webcam/:numberCam', getWebcam);
-router.get('/news', getNews);
-router.get('/news/:newsId', getNewsOne);
+router.get('/news/:page/:newsOnPage', getNews);
+router.get('/newsone/:newsId', getNewsOne);
 router.post('/likes', postLikes);
