@@ -1,13 +1,19 @@
 import { Card } from '../Model/Card.js';
 import Photo from '../Model/Photo.js';
 
-export async function getTrailsService(filter, page = 1) {
+export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 	try {
 		const cardsDB = await Card.find({ $and: [{ state: filter, bikeType: filter }] }).populate(
 			'kudoses'
 		);
-		const cardsOnPage = 10;
-		const cardsCurrentPage = cardsDB.slice(cardsOnPage * page - cardsOnPage, cardsOnPage * page);
+		const quantityPages = Math.ceil(cardsDB.length / cardsOnPage);
+
+		const cardsSorted = sortCards(sort, cardsDB);
+
+		const cardsCurrentPage = cardsSorted.slice(
+			cardsOnPage * page - cardsOnPage,
+			cardsOnPage * page
+		);
 
 		const card = cardsCurrentPage.map(c => c.toObject());
 
@@ -15,7 +21,7 @@ export async function getTrailsService(filter, page = 1) {
 			let likes = card[i].kudoses.usersIdLike.length - card[i].kudoses.usersIdDisLike.length;
 			card[i].likes = likes;
 		}
-		return { message: 'Карточки маршрутов получены', data: card };
+		return { message: 'Карточки маршрутов получены', data: { cards: card, quantityPages } };
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
@@ -42,3 +48,11 @@ export async function getTrailService(trailId) {
 		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
 	}
 }
+
+const sortCards = (sortRule, cards) => {
+	if (sortRule.sortDirection === 'up') {
+		return cards.sort((a, b) => a[sortRule.sortField] - b[sortRule.sortField]);
+	} else {
+		return cards.sort((a, b) => b[sortRule.sortField] - a[sortRule.sortField]);
+	}
+};

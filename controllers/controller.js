@@ -11,8 +11,8 @@ const __dirname = path.resolve();
 
 export async function getTrails(req, res) {
 	try {
-		const { filter, page } = req.body;
-		const trails = await getTrailsService(filter, page);
+		const { filter, sort, cardsOnPage, page } = req.body;
+		const trails = await getTrailsService(filter, sort, cardsOnPage, page);
 		res.status(200).json({ message: 'Карточки маршрутов', trails: trails.data });
 	} catch (error) {
 		console.log(error);
