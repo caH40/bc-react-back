@@ -1,11 +1,14 @@
 import { News } from '../Model/News.js';
 
-export async function getNewsService() {
+export async function getNewsService(page, newsOnPage) {
 	try {
 		const newsDB = await News.find().populate('kudoses').populate('comments');
 		newsDB.reverse();
 
-		const news = newsDB.map(newsOne => {
+		const quantityPages = Math.ceil(newsDB.length / newsOnPage);
+		const newsCurrentPage = newsDB.slice(newsOnPage * page - newsOnPage, newsOnPage * page);
+
+		const news = newsCurrentPage.map(newsOne => {
 			newsOne = newsOne.toObject();
 			const likeQuantity =
 				newsOne.kudoses.usersIdLike.length - newsOne.kudoses.usersIdDislike.length;
@@ -13,12 +16,13 @@ export async function getNewsService() {
 			return newsOne;
 		});
 
-		return { message: `Новости`, data: news };
+		return { message: `Новости`, data: { news, quantityPages } };
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. getNewsService()';
 	}
 }
+
 export async function getNewsOneService(newsId) {
 	try {
 		const newsDB = await News.findOne({ _id: newsId }).populate('kudoses').populate('comments');

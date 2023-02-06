@@ -101,7 +101,8 @@ export async function getWebcam(req, res) {
 
 export async function getNews(req, res) {
 	try {
-		const news = await getNewsService();
+		const { page, newsOnPage } = req.params;
+		const news = await getNewsService(page, newsOnPage);
 		res.status(200).json({ message: news.message, news: news.data });
 	} catch (error) {
 		console.log(error);
