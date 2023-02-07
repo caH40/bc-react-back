@@ -36,3 +36,18 @@ export async function getNewsOneService(newsId) {
 		throw 'Непредвиденная ошибка на сервере. getNewsService()';
 	}
 }
+
+export async function postNewsService(title, textBody, file) {
+	try {
+		const newsDB = await News.create({
+			newsTitle: title,
+			newsText: textBody,
+			image: file.filename,
+			imagePath: file.destination,
+		});
+		if (!newsDB) throw 'Ошибка при сохранении новости в БД';
+		return { message: `Новость сохранена в БД` };
+	} catch (error) {
+		throw error;
+	}
+}

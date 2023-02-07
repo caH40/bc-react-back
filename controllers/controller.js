@@ -4,7 +4,7 @@ import { getTrailService, getTrailsService } from '../service/trails.js';
 
 import path from 'path';
 
-import { getNewsOneService, getNewsService } from '../service/news.js';
+import { getNewsOneService, getNewsService, postNewsService } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
 
 const __dirname = path.resolve();
@@ -140,10 +140,10 @@ export async function postLikes(req, res) {
 
 export async function postNews(req, res) {
 	try {
-		const dataForm = req.file;
+		const file = req.file;
 		const { title, textBody } = req.body;
-		console.log(title, textBody, dataForm);
-		res.sendStatus(200);
+		const news = await postNewsService(title, textBody, file);
+		res.status(200).json(news);
 	} catch (error) {
 		console.log(error);
 		return res
