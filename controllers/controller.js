@@ -4,7 +4,12 @@ import { getTrailService, getTrailsService } from '../service/trails.js';
 
 import path from 'path';
 
-import { getNewsOneService, getNewsService, postNewsService } from '../service/news.js';
+import {
+	editNewsService,
+	getNewsOneService,
+	getNewsService,
+	postNewsService,
+} from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
 
 const __dirname = path.resolve();
@@ -144,6 +149,21 @@ export async function postNews(req, res) {
 		const { userId } = req.params;
 		const { title, textBody } = req.body;
 		const news = await postNewsService(title, textBody, file, userId);
+		res.status(200).json(news);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function editNews(req, res) {
+	try {
+		const file = req.file;
+		const { userId } = req.params;
+		const { title, textBody } = req.body;
+		const news = await editNewsService(title, textBody, file, userId);
 		res.status(200).json(news);
 	} catch (error) {
 		console.log(error);

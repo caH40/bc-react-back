@@ -12,6 +12,7 @@ import {
 	getNewsOne,
 	postLikes,
 	postNews,
+	editNews,
 } from '../controllers/controller.js';
 import { authModerator } from '../middleware/authModerator.js';
 
@@ -27,4 +28,5 @@ router.get('/webcam/:numberCam', getWebcam);
 router.get('/news/:page/:newsOnPage', getNews);
 router.get('/newsone/:newsId', getNewsOne);
 router.post('/likes', postLikes);
-router.post('/postnews', authModerator, uploadFile.single('files'), postNews);
+router.post('/post-news', authModerator, uploadFile.single('files'), postNews);
+router.post('/edit-news', authModerator, uploadFile.single('files'), editNews);
