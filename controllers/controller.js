@@ -3,8 +3,8 @@ import { getResultsAthleteService, getResultsService } from '../service/results.
 import { getTrailService, getTrailsService } from '../service/trails.js';
 
 import path from 'path';
-import { downloadImage } from '../service/download.js';
-import { getNewsOneService, getNewsService } from '../service/news.js';
+
+import { getNewsOneService, getNewsService, postNewsService } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
 
 const __dirname = path.resolve();
@@ -130,6 +130,20 @@ export async function postLikes(req, res) {
 		const { changesLikes } = req.body;
 		const likes = await postLikesService(changesLikes);
 		res.status(200).json({ message: likes.message });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postNews(req, res) {
+	try {
+		const file = req.file;
+		const { title, textBody } = req.body;
+		const news = await postNewsService(title, textBody, file);
+		res.status(200).json(news);
 	} catch (error) {
 		console.log(error);
 		return res
