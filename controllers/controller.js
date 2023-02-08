@@ -141,8 +141,9 @@ export async function postLikes(req, res) {
 export async function postNews(req, res) {
 	try {
 		const file = req.file;
+		const { userId } = req.params;
 		const { title, textBody } = req.body;
-		const news = await postNewsService(title, textBody, file);
+		const news = await postNewsService(title, textBody, file, userId);
 		res.status(200).json(news);
 	} catch (error) {
 		console.log(error);

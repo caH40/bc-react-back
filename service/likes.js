@@ -1,4 +1,4 @@
-import KudosNews from '../Model/KudosNews.js';
+import { KudosNews } from '../Model/KudosNews.js';
 
 export async function postLikesService(changesLikes) {
 	try {

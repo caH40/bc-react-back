@@ -20,6 +20,7 @@ export async function refreshService(refreshToken) {
 			id: userDB._id,
 			email: userDB.email,
 			username: userDB.username,
+			role: userDB.role,
 		});
 
 		return {
@@ -28,6 +29,7 @@ export async function refreshService(refreshToken) {
 				id: userDB._id,
 				email: userDB.email,
 				username: userDB.username,
+				role: userDB.role,
 				photoProfile: userDB.photoProfile,
 			},
 		};

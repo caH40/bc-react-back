@@ -14,7 +14,7 @@ const userSchema = new Schema({
 	birthday: { type: Number },
 	city: { type: String },
 	team: { type: String },
-	roles: [{ type: String, Ref: 'Role' }],
+	role: { type: String },
 	photoProfile: { type: String },
 });
 
