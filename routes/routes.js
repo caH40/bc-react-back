@@ -13,7 +13,7 @@ import {
 	postLikes,
 	postNews,
 } from '../controllers/controller.js';
-import { checkAuth } from '../middleware/auth.js';
+import { authModerator } from '../middleware/authModerator.js';
 
 export const router = new Router();
 
@@ -27,4 +27,4 @@ router.get('/webcam/:numberCam', getWebcam);
 router.get('/news/:page/:newsOnPage', getNews);
 router.get('/newsone/:newsId', getNewsOne);
 router.post('/likes', postLikes);
-router.post('/postnews', uploadFile.single('files'), postNews);
+router.post('/postnews', authModerator, uploadFile.single('files'), postNews);

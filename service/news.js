@@ -1,3 +1,4 @@
+import { KudosNews } from '../Model/KudosNews.js';
 import { News } from '../Model/News.js';
 
 export async function getNewsService(page, newsOnPage) {
@@ -37,14 +38,20 @@ export async function getNewsOneService(newsId) {
 	}
 }
 
-export async function postNewsService(title, textBody, file) {
+export async function postNewsService(title, textBody, file, userId) {
 	try {
 		const newsDB = await News.create({
 			newsTitle: title,
 			newsText: textBody,
 			image: file.filename,
 			imagePath: file.destination,
+			postedBy: userId,
 		});
+
+		const kudosNewsDB = await KudosNews.create({ newsId: newsDB._id });
+		newsDB.kudoses = kudosNewsDB._id;
+		await newsDB.save();
+
 		if (!newsDB) throw 'Ошибка при сохранении новости в БД';
 		return { message: `Новость сохранена в БД` };
 	} catch (error) {

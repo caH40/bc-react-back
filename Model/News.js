@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
 import pkg from 'mongoose';
 const { Schema, model } = pkg;
-
-import KudosNews from './KudosNews.js';
-import { User } from './User.js';
-import CommentNews from './CommentNews.js';
+import { CommentNews } from './CommentNews.js';
 
 const newsSchema = new Schema({
 	newsTitle: { type: String, required: true },

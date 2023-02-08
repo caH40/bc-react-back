@@ -16,10 +16,11 @@ export async function registrationService(username, email, password) {
 
 		const hashPassword = await bcrypt.hash(password, 10);
 		const activationToken = uuidv4();
-		const { _id: id } = await User.create({
+		const { _id: id, role } = await User.create({
 			username,
 			email,
 			password: hashPassword,
+			role: 'user',
 		});
 
 		await UserConfirm.create({
@@ -32,11 +33,11 @@ export async function registrationService(username, email, password) {
 		const target = 'registration'; //для отправки письма для активации
 		const sendedMail = await mailService(target, activationToken, email, username, password);
 
-		const tokens = await generateToken({ username, email, id });
+		const tokens = await generateToken({ username, email, id, role });
 		await saveToken(id, tokens.refreshToken);
 
 		const message = 'Регистрация прошла успешно';
-		return { ...tokens, message, user: { username, email, id } };
+		return { ...tokens, message, user: { username, email, id, role } };
 	} catch (error) {
 		console.log(error);
 		throw error;
