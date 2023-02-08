@@ -6,6 +6,7 @@ import path from 'path';
 
 import {
 	editNewsService,
+	getAllNewsService,
 	getNewsOneService,
 	getNewsService,
 	postNewsService,
@@ -147,9 +148,19 @@ export async function postNews(req, res) {
 	try {
 		const file = req.file;
 		const { userId } = req.params;
-		const { title, textBody } = req.body;
-		const news = await postNewsService(title, textBody, file, userId);
-		res.status(200).json(news);
+		const { title, textBody, type, newsId } = req.body;
+
+		if (type === 'create') {
+			const news = await postNewsService(title, textBody, file, userId);
+			return res.status(200).json(news);
+		}
+
+		if (type === 'edit') {
+			const news = await editNewsService(title, textBody, file, newsId);
+			return res.status(200).json(news);
+		}
+
+		res.status(400).json({ message: 'Не получен тип действия с формой' });
 	} catch (error) {
 		console.log(error);
 		return res
@@ -158,13 +169,10 @@ export async function postNews(req, res) {
 	}
 }
 
-export async function editNews(req, res) {
+export async function getAllNews(req, res) {
 	try {
-		const file = req.file;
-		const { userId } = req.params;
-		const { title, textBody } = req.body;
-		const news = await editNewsService(title, textBody, file, userId);
-		res.status(200).json(news);
+		const news = await getAllNewsService();
+		res.status(200).json({ message: news.message, news: news.data });
 	} catch (error) {
 		console.log(error);
 		return res

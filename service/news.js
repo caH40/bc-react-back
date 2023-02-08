@@ -1,3 +1,8 @@
+import path from 'path';
+import fs from 'fs';
+
+const __dirname = path.resolve();
+
 import { KudosNews } from '../Model/KudosNews.js';
 import { News } from '../Model/News.js';
 
@@ -59,23 +64,41 @@ export async function postNewsService(title, textBody, file, userId) {
 	}
 }
 
-export async function editNewsService(title, textBody, file, userId) {
+export async function editNewsService(title, textBody, file, newsId) {
+	const image = file ? (file.destination + file.filename).slice(6) : undefined;
 	try {
-		const newsDB = await News.create({
-			newsTitle: title,
-			newsText: textBody,
-			image: (file.destination + file.filename).slice(6),
-			postedBy: userId,
-			date: Date.now(),
+		const newsDB = await News.findOneAndUpdate(
+			{ _id: newsId },
+			{
+				$set: {
+					newsTitle: title,
+					newsText: textBody,
+					image,
+				},
+			}
+		);
+		const pathToImage = path.resolve(__dirname, 'build', newsDB.image);
+		fs.unlink(pathToImage, error => {
+			if (error) throw error;
 		});
-
-		const kudosNewsDB = await KudosNews.create({ newsId: newsDB._id });
-		newsDB.kudoses = kudosNewsDB._id;
-		await newsDB.save();
 
 		if (!newsDB) throw 'Ошибка при сохранении новости в БД';
 		return { message: `Новость сохранена в БД` };
 	} catch (error) {
 		throw error;
+	}
+}
+
+export async function getAllNewsService() {
+	try {
+		const newsDB = await News.find()
+			.populate('comments')
+			.populate({ path: 'postedBy', select: 'username' });
+		newsDB.reverse();
+
+		return { message: `Все новости`, data: newsDB };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. getAllNewsService()';
 	}
 }
