@@ -25,5 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 webcam*.jpg
 
-images/news/*
-!images/news/.gitkeep
+build/images/news/*
+!build/images/news/.gitkeep

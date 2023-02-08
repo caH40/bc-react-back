@@ -43,9 +43,30 @@ export async function postNewsService(title, textBody, file, userId) {
 		const newsDB = await News.create({
 			newsTitle: title,
 			newsText: textBody,
-			image: file.filename,
-			imagePath: file.destination,
+			image: (file.destination + file.filename).slice(6),
 			postedBy: userId,
+			date: Date.now(),
+		});
+
+		const kudosNewsDB = await KudosNews.create({ newsId: newsDB._id });
+		newsDB.kudoses = kudosNewsDB._id;
+		await newsDB.save();
+
+		if (!newsDB) throw 'Ошибка при сохранении новости в БД';
+		return { message: `Новость сохранена в БД` };
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function editNewsService(title, textBody, file, userId) {
+	try {
+		const newsDB = await News.create({
+			newsTitle: title,
+			newsText: textBody,
+			image: (file.destination + file.filename).slice(6),
+			postedBy: userId,
+			date: Date.now(),
 		});
 
 		const kudosNewsDB = await KudosNews.create({ newsId: newsDB._id });
