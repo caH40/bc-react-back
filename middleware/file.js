@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
 		cb(null, 'build/images/news/');
 	},
 	filename: function (req, file, cb) {
-		cb(null, Date.now() + '-' + file.originalname);
+		cb(null, new Date().toLocaleDateString() + '-' + file.originalname);
 	},
 });
 
