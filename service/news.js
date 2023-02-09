@@ -78,7 +78,7 @@ export async function editNewsService(title, textBody, file, newsId) {
 			}
 		);
 		const pathToImage = path.resolve(__dirname, 'build', newsDB.image);
-		fs.unlink(pathToImage, error => {
+		fs.unlinkSync(pathToImage, error => {
 			if (error) throw error;
 		});
 
@@ -100,5 +100,21 @@ export async function getAllNewsService() {
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. getAllNewsService()';
+	}
+}
+
+export async function deleteNewsService(newsId) {
+	try {
+		const newsDB = await News.findOneAndDelete({ _id: newsId });
+
+		const pathToImage = path.resolve(__dirname, 'build', newsDB.image);
+		fs.unlinkSync(pathToImage, error => {
+			if (error) throw error;
+		});
+
+		return { message: `Новость удалена`, data: newsDB };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. deleteNewsService()';
 	}
 }

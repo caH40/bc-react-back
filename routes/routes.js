@@ -13,6 +13,7 @@ import {
 	postLikes,
 	postNews,
 	getAllNews,
+	deleteNews,
 } from '../controllers/controller.js';
 import { authModerator } from '../middleware/authModerator.js';
 
@@ -30,3 +31,4 @@ router.get('/newsone/:newsId', getNewsOne);
 router.post('/likes', postLikes);
 router.post('/post-news', authModerator, uploadFile.single('files'), postNews);
 router.get('/news-all', authModerator, getAllNews);
+router.post('/news-delete', authModerator, deleteNews);

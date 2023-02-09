@@ -5,6 +5,7 @@ import { getTrailService, getTrailsService } from '../service/trails.js';
 import path from 'path';
 
 import {
+	deleteNewsService,
 	editNewsService,
 	getAllNewsService,
 	getNewsOneService,
@@ -172,6 +173,19 @@ export async function postNews(req, res) {
 export async function getAllNews(req, res) {
 	try {
 		const news = await getAllNewsService();
+		res.status(200).json({ message: news.message, news: news.data });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function deleteNews(req, res) {
+	try {
+		const { newsId } = req.body;
+		const news = await deleteNewsService(newsId);
 		res.status(200).json({ message: news.message, news: news.data });
 	} catch (error) {
 		console.log(error);
