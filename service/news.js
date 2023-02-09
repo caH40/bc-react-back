@@ -77,10 +77,12 @@ export async function editNewsService(title, textBody, file, newsId) {
 				},
 			}
 		);
-		const pathToImage = path.resolve(__dirname, 'build', newsDB.image);
-		fs.unlinkSync(pathToImage, error => {
-			if (error) throw error;
-		});
+		if (image) {
+			const pathToImage = path.resolve(__dirname, 'build', newsDB.image);
+			fs.unlinkSync(pathToImage, error => {
+				if (error) throw error;
+			});
+		}
 
 		if (!newsDB) throw 'Ошибка при сохранении новости в БД';
 		return { message: `Новость сохранена в БД` };
