@@ -206,3 +206,15 @@ export async function postTrek(req, res) {
 			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
 	}
 }
+
+export async function postTrail(req, res) {
+	try {
+		console.log(req.body);
+		// res.status(200).json({ message: 'Файл трека получен на сервере' });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
