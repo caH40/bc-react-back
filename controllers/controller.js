@@ -209,7 +209,7 @@ export async function postTrek(req, res) {
 
 export async function postTrail(req, res) {
 	try {
-		console.log(req.body);
+		// console.log(req.body);
 		// res.status(200).json({ message: 'Файл трека получен на сервере' });
 	} catch (error) {
 		console.log(error);
