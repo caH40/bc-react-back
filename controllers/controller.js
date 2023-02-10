@@ -1,6 +1,6 @@
 import { getEventsService } from '../service/events.js';
 import { getResultsAthleteService, getResultsService } from '../service/results.js';
-import { getTrailService, getTrailsService } from '../service/trails.js';
+import { getTrailService, getTrailsService, postTrailService } from '../service/trails.js';
 
 import path from 'path';
 
@@ -209,8 +209,11 @@ export async function postTrek(req, res) {
 
 export async function postTrail(req, res) {
 	try {
-		// console.log(req.body);
-		// res.status(200).json({ message: 'Файл трека получен на сервере' });
+		const { dataForm } = req.body;
+		const { userId } = req.params;
+
+		const trail = await postTrailService(dataForm, userId);
+		res.status(200).json({ message: trail.message, trailId: trail.trailId });
 	} catch (error) {
 		console.log(error);
 		return res

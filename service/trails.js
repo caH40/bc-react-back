@@ -1,5 +1,6 @@
 import { Card } from '../Model/Card.js';
-import Photo from '../Model/Photo.js';
+import { Kudos } from '../Model/Kudos.js';
+import { Photos } from '../Model/Photo.js';
 
 export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 	try {
@@ -33,7 +34,7 @@ export async function getTrailService(trailId) {
 		const cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
 			.populate('kudoses')
 			.populate('postedBy');
-		const photos = await Photo.findOne({ cardId: trailId });
+		const photos = await Photos.findOne({ cardId: trailId });
 
 		const descriptionAreaArr = cardDB.descriptionArea.split('\n');
 		const card = cardDB.toObject();
@@ -56,3 +57,55 @@ const sortCards = (sortRule, cards) => {
 		return cards.sort((a, b) => b[sortRule.sortField] - a[sortRule.sortField]);
 	}
 };
+
+export async function postTrailService(form, userId) {
+	try {
+		const {
+			nameRoute,
+			state,
+			bikeType,
+			start,
+			turn,
+			finish,
+			distance,
+			ascent,
+			descriptionArea,
+			cardPhoto,
+			fileTrekName,
+			urlVideo,
+			urlTrekGConnect,
+			descPhotos,
+		} = form;
+
+		const descPhotoClear = descPhotos.map(photo => photo.source);
+		const photosDB = await Photos.create({ descPhoto: descPhotoClear });
+
+		const kudosDB = await Kudos.create({});
+
+		const cardDB = await Card.create({
+			nameRoute,
+			state,
+			bikeType,
+			start,
+			turn,
+			finish,
+			distance,
+			ascent,
+			descriptionArea,
+			cardPhoto: cardPhoto.source,
+			fileTrekName,
+			urlVideo,
+			urlTrekGConnect,
+			postedBy: userId,
+			descPhotos: photosDB._id,
+			kudoses: kudosDB._id,
+			date: Date.now(),
+		});
+
+		if (!cardDB) throw { message: 'Ошибка при сохранении данных нового маршрута' };
+		return { message: 'Новый маршрут сохранён!', trailId: cardDB._id };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postTrailService()';
+	}
+}

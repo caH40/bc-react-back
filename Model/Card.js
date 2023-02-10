@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import pkg from 'mongoose';
-import Kudos from './Kudos.js';
+import { Kudos } from './Kudos.js';
 import { User } from './User.js';
 const { Schema, model } = pkg;
 
@@ -19,6 +19,7 @@ const cardSchema = new Schema({
 	urlVideo: { type: String },
 	urlTrekGConnect: { type: String },
 	postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+	descPhotos: { type: mongoose.Schema.Types.ObjectId, ref: 'Photos' },
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 	kudoses: { type: mongoose.Schema.Types.ObjectId, ref: 'Kudos' },
 	date: { type: Number },
