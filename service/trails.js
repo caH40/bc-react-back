@@ -1,4 +1,5 @@
 import { Card } from '../Model/Card.js';
+import { Comment } from '../Model/Comment.js';
 import { Kudos } from '../Model/Kudos.js';
 import { Photos } from '../Model/Photo.js';
 
@@ -108,5 +109,34 @@ export async function postTrailService(form, userId) {
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. postTrailService()';
+	}
+}
+
+export async function getTrailsEditService() {
+	try {
+		const cardsDB = await Card.find().populate({ path: 'postedBy', select: 'username' });
+
+		if (!cardsDB.length) throw { message: 'Ошибка при получении маршрутов' };
+		cardsDB.reverse();
+
+		return { message: 'Все маршруты получены!', data: cardsDB };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. getTrailsEditService()';
+	}
+}
+
+export async function deleteTrailService(trailId) {
+	try {
+		const cardDB = await Card.findByIdAndDelete(trailId);
+		if (!cardDB) throw { message: 'Ошибка при получении маршрутов' };
+		const photosDB = await Photos.findByIdAndDelete(cardDB.descPhotos);
+		const kudosDB = await Kudos.findByIdAndDelete(cardDB.kudoses);
+		const commentsDB = await Comment.deleteMany({ cardId: cardDB._id });
+
+		return { message: 'Маршрут удален!' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. deleteTrailService()';
 	}
 }
