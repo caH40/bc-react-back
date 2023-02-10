@@ -34,19 +34,20 @@ export async function getTrailService(trailId) {
 		const cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
 			.populate('kudoses')
 			.populate('postedBy');
-		const photos = await Photos.findOne({ cardId: trailId });
+
+		const photosDB = await Photos.findOne({ _id: cardDB.descPhotos });
 
 		const descriptionAreaArr = cardDB.descriptionArea.split('\n');
 		const card = cardDB.toObject();
 
-		card.descPhoto = photos.descPhoto;
-		card.descPhotoId = photos._id;
-		card.authorPhoto = photos.authorPhoto;
+		card.descPhoto = photosDB.descPhoto;
+		card.authorPhoto = photosDB.authorPhoto;
 		card.descriptionArea = descriptionAreaArr;
+
 		return { message: 'Описание маршрута', data: card };
 	} catch (error) {
 		console.log(error);
-		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
+		throw 'Непредвиденная ошибка на сервере. getTrailService()';
 	}
 }
 
