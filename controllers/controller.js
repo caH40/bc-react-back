@@ -1,6 +1,6 @@
 import { getEventsService } from '../service/events.js';
 import { getResultsAthleteService, getResultsService } from '../service/results.js';
-import { getTrailService, getTrailsService } from '../service/trails.js';
+import { getTrailService, getTrailsService, postTrailService } from '../service/trails.js';
 
 import path from 'path';
 
@@ -187,6 +187,33 @@ export async function deleteNews(req, res) {
 		const { newsId } = req.body;
 		const news = await deleteNewsService(newsId);
 		res.status(200).json({ message: news.message, news: news.data });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postTrek(req, res) {
+	try {
+		if (!req.file) throw 'Файл трека не получен на сервере';
+		res.status(200).json({ message: 'Файл трека получен на сервере' });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postTrail(req, res) {
+	try {
+		const { dataForm } = req.body;
+		const { userId } = req.params;
+
+		const trail = await postTrailService(dataForm, userId);
+		res.status(200).json({ message: trail.message, trailId: trail.trailId });
 	} catch (error) {
 		console.log(error);
 		return res
