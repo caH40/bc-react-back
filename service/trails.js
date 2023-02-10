@@ -1,4 +1,5 @@
 import { Card } from '../Model/Card.js';
+import { Comment } from '../Model/Comment.js';
 import { Kudos } from '../Model/Kudos.js';
 import { Photos } from '../Model/Photo.js';
 
@@ -31,10 +32,11 @@ export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 
 export async function getTrailService(trailId) {
 	try {
-		const cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
+		const cardDB = await Card.findOne({ _id: trailId })
+			// const cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
 			.populate('kudoses')
 			.populate('postedBy');
-
+		if (!cardDB) throw `Маршрут не найден ${trailId}`;
 		const photosDB = await Photos.findOne({ _id: cardDB.descPhotos });
 
 		const descriptionAreaArr = cardDB.descriptionArea.split('\n');
@@ -46,8 +48,7 @@ export async function getTrailService(trailId) {
 
 		return { message: 'Описание маршрута', data: card };
 	} catch (error) {
-		console.log(error);
-		throw 'Непредвиденная ошибка на сервере. getTrailService()';
+		throw error;
 	}
 }
 
@@ -108,5 +109,92 @@ export async function postTrailService(form, userId) {
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. postTrailService()';
+	}
+}
+
+export async function postTrailEditService(form, userId) {
+	try {
+		const {
+			_id,
+			descPhoto: descPhotosId,
+			nameRoute,
+			state,
+			bikeType,
+			start,
+			turn,
+			finish,
+			distance,
+			ascent,
+			descriptionArea,
+			cardPhoto,
+			fileTrekName,
+			urlVideo,
+			urlTrekGConnect,
+			descPhotos,
+		} = form;
+
+		const descriptionAreaString =
+			typeof descriptionArea === 'object' ? descriptionArea.join('\n') : descriptionArea;
+		console.log(descriptionAreaString);
+		const descPhotoClear = descPhotos.map(photo => photo.source);
+		const photosDB = await Photos.findByIdAndUpdate(descPhotosId, {
+			$set: { descPhoto: descPhotoClear },
+		});
+
+		const cardDB = await Card.findByIdAndUpdate(_id, {
+			$set: {
+				nameRoute,
+				state,
+				bikeType,
+				start,
+				turn,
+				finish,
+				distance,
+				ascent,
+				descriptionArea: descriptionAreaString,
+				cardPhoto: cardPhoto.source,
+				fileTrekName,
+				urlVideo,
+				urlTrekGConnect,
+				postedBy: userId,
+				descPhotos: photosDB._id,
+				dateEdit: Date.now(),
+			},
+		});
+
+		if (!cardDB) throw { message: 'Ошибка при сохранении данных отредактированного маршрута' };
+		return { message: 'Отредактированный маршрут сохранён!', trailId: cardDB._id };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postTrailEditService()';
+	}
+}
+
+export async function getTrailsEditService() {
+	try {
+		const cardsDB = await Card.find().populate({ path: 'postedBy', select: 'username' });
+
+		if (!cardsDB.length) throw { message: 'Ошибка при получении маршрутов' };
+		cardsDB.reverse();
+
+		return { message: 'Все маршруты получены!', data: cardsDB };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. getTrailsEditService()';
+	}
+}
+
+export async function deleteTrailService(trailId) {
+	try {
+		const cardDB = await Card.findByIdAndDelete(trailId);
+		if (!cardDB) throw { message: 'Ошибка при получении маршрутов' };
+		const photosDB = await Photos.findByIdAndDelete(cardDB.descPhotos);
+		const kudosDB = await Kudos.findByIdAndDelete(cardDB.kudoses);
+		const commentsDB = await Comment.deleteMany({ cardId: cardDB._id });
+
+		return { message: 'Маршрут удален!' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. deleteTrailService()';
 	}
 }
