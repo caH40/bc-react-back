@@ -5,6 +5,7 @@ import {
 	getTrailsEditService,
 	getTrailService,
 	getTrailsService,
+	postTrailEditService,
 	postTrailService,
 } from '../service/trails.js';
 
@@ -215,10 +216,16 @@ export async function postTrek(req, res) {
 
 export async function postTrail(req, res) {
 	try {
-		const { dataForm } = req.body;
+		const { dataForm, type } = req.body;
 		const { userId } = req.params;
 
-		const trail = await postTrailService(dataForm, userId);
+		let trail = {};
+		if (type === 'edit') {
+			trail = await postTrailEditService(dataForm, userId);
+		} else {
+			trail = await postTrailService(dataForm, userId);
+		}
+
 		res.status(200).json({ message: trail.message, trailId: trail.trailId });
 	} catch (error) {
 		console.log(error);
