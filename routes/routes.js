@@ -19,6 +19,7 @@ import {
 	getTrailsEdit,
 	deleteTrail,
 	postCommentNews,
+	getCommentsNews,
 } from '../controllers/controller.js';
 import { authModerator } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
@@ -44,3 +45,4 @@ router.post('/trail-post', authModerator, postTrail);
 router.get('/trail-all', authModerator, getTrailsEdit);
 router.post('/trail-delete', authModerator, deleteTrail);
 router.post('/commentnews-post', getAuth, postCommentNews);
+router.get('/comments-get/:newsId', checkAuth, getCommentsNews);

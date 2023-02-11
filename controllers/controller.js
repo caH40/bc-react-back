@@ -20,7 +20,7 @@ import {
 	postNewsService,
 } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
-import { postCommentNewsService } from '../service/comments.js';
+import { getCommentsNewsService, postCommentNewsService } from '../service/comments.js';
 
 const __dirname = path.resolve();
 
@@ -268,6 +268,19 @@ export async function postCommentNews(req, res) {
 		const { comment, newsId } = req.body;
 		const savedComment = await postCommentNewsService(comment, userId, newsId);
 		res.status(200).json({ message: savedComment.message });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function getCommentsNews(req, res) {
+	try {
+		const { newsId } = req.params;
+		const comments = await getCommentsNewsService(newsId);
+		res.status(200).json({ message: comments.message, comments: comments.data });
 	} catch (error) {
 		console.log(error);
 		return res
