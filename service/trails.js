@@ -30,12 +30,17 @@ export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 	}
 }
 
-export async function getTrailService(trailId) {
+export async function getTrailService(trailId, type) {
 	try {
-		const cardDB = await Card.findOne({ _id: trailId })
-			// const cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
-			.populate('kudoses')
-			.populate('postedBy');
+		let cardDB = {};
+		if (type === 'edit') {
+			cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
+				.populate('kudoses')
+				.populate('postedBy');
+		} else {
+			cardDB = await Card.findOne({ _id: trailId }).populate('kudoses').populate('postedBy');
+		}
+
 		if (!cardDB) throw `Маршрут не найден ${trailId}`;
 		const photosDB = await Photos.findOne({ _id: cardDB.descPhotos });
 
@@ -135,7 +140,7 @@ export async function postTrailEditService(form, userId) {
 
 		const descriptionAreaString =
 			typeof descriptionArea === 'object' ? descriptionArea.join('\n') : descriptionArea;
-		console.log(descriptionAreaString);
+
 		const descPhotoClear = descPhotos.map(photo => photo.source);
 		const photosDB = await Photos.findByIdAndUpdate(descPhotosId, {
 			$set: { descPhoto: descPhotoClear },

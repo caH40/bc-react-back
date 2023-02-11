@@ -38,9 +38,9 @@ export async function getTrails(req, res) {
 
 export async function getTrail(req, res) {
 	try {
-		const { id } = req.query;
+		const { id: trailId, type } = req.query;
 
-		const trail = await getTrailService(id);
+		const trail = await getTrailService(trailId, type);
 		res.status(200).json({ message: trail.message, trail: trail.data });
 	} catch (error) {
 		console.log(error);
