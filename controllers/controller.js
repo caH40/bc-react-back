@@ -20,6 +20,7 @@ import {
 	postNewsService,
 } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
+import { postCommentNewsService } from '../service/comments.js';
 
 const __dirname = path.resolve();
 
@@ -253,6 +254,20 @@ export async function deleteTrail(req, res) {
 		const { trailId } = req.body;
 		const trails = await deleteTrailService(trailId);
 		res.status(200).json({ message: trails.message });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postCommentNews(req, res) {
+	try {
+		const { userId } = req.params;
+		const { comment, newsId } = req.body;
+		const savedComment = await postCommentNewsService(comment, userId, newsId);
+		res.status(200).json({ message: savedComment.message });
 	} catch (error) {
 		console.log(error);
 		return res
