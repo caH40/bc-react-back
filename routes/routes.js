@@ -21,7 +21,7 @@ import {
 } from '../controllers/controller.js';
 import { authModerator } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
-import { getAuth } from '../middleware/auth.js';
+import { checkAuth, getAuth } from '../middleware/auth.js';
 
 export const router = new Router();
 
@@ -34,7 +34,7 @@ router.get('/gettrek', getTrek);
 router.get('/webcam/:numberCam', getWebcam);
 router.get('/news/:page/:newsOnPage', getNews);
 router.get('/newsone/:newsId', getNewsOne);
-router.post('/likes', postLikes);
+router.post('/likes', checkAuth, postLikes);
 router.post('/post-news', authModerator, uploadFile.single('files'), postNews);
 router.get('/news-all', authModerator, getAllNews);
 router.post('/news-delete', authModerator, deleteNews);
