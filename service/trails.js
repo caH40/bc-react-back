@@ -1,7 +1,12 @@
+import fs from 'fs';
+import path from 'path';
+
 import { Card } from '../Model/Card.js';
 import { Comment } from '../Model/Comment.js';
 import { Kudos } from '../Model/Kudos.js';
 import { Photos } from '../Model/Photo.js';
+
+const __dirname = path.resolve();
 
 export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 	try {
@@ -34,11 +39,11 @@ export async function getTrailService(trailId, type) {
 	try {
 		let cardDB = {};
 		if (type === 'edit') {
+			cardDB = await Card.findOne({ _id: trailId }).populate('kudoses').populate('postedBy');
+		} else {
 			cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
 				.populate('kudoses')
 				.populate('postedBy');
-		} else {
-			cardDB = await Card.findOne({ _id: trailId }).populate('kudoses').populate('postedBy');
 		}
 
 		if (!cardDB) throw `Маршрут не найден ${trailId}`;
@@ -168,6 +173,17 @@ export async function postTrailEditService(form, userId) {
 		});
 
 		if (!cardDB) throw { message: 'Ошибка при сохранении данных отредактированного маршрута' };
+
+		if (fileTrekName !== cardDB.fileTrekName && fileTrekName) {
+			fs.unlink(path.resolve(__dirname, 'treks', cardDB.fileTrekName), error => {
+				if (error) {
+					console.log(error);
+				} else {
+					console.log(`Старый трек успешно удалён ${cardDB.fileTrekName}`);
+				}
+			});
+		}
+
 		return { message: 'Отредактированный маршрут сохранён!', trailId: cardDB._id };
 	} catch (error) {
 		console.log(error);
