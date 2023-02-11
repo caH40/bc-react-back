@@ -28,3 +28,13 @@ export async function getCommentsNewsService(newsId) {
 		throw error;
 	}
 }
+
+export async function postCommentDeleteNewsService(commentId, userId) {
+	try {
+		const commentDB = await CommentNews.findOneAndDelete({ _id: commentId, postedBy: userId });
+		if (!commentDB) throw 'Комментарий к новости не найден!';
+		return { message: 'Ваш комментарии к новости удалён!' };
+	} catch (error) {
+		throw error;
+	}
+}
