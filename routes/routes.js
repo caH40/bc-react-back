@@ -21,11 +21,12 @@ import {
 } from '../controllers/controller.js';
 import { authModerator } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
+import { getAuth } from '../middleware/auth.js';
 
 export const router = new Router();
 
 router.post('/trails', getTrails);
-router.get('/trail', getTrail);
+router.get('/trail', getAuth, getTrail);
 router.get('/events', getEvents);
 router.get('/results', getResults);
 router.get('/athlete/results', getResultsAthlete);
