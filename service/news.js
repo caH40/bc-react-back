@@ -5,10 +5,12 @@ const __dirname = path.resolve();
 
 import { KudosNews } from '../Model/KudosNews.js';
 import { News } from '../Model/News.js';
+import { Kudos } from '../Model/Kudos.js';
+import { CommentNews } from '../Model/CommentNews.js';
 
 export async function getNewsService(page, newsOnPage) {
 	try {
-		const newsDB = await News.find().populate('kudoses').populate('comments');
+		const newsDB = await News.find().populate('kudoses');
 		newsDB.reverse();
 
 		const quantityPages = Math.ceil(newsDB.length / newsOnPage);
@@ -31,7 +33,7 @@ export async function getNewsService(page, newsOnPage) {
 
 export async function getNewsOneService(newsId) {
 	try {
-		const newsDB = await News.findOne({ _id: newsId }).populate('kudoses').populate('comments');
+		const newsDB = await News.findOne({ _id: newsId }).populate('kudoses');
 		const newsOne = newsDB.toObject();
 		const likeQuantity =
 			newsOne.kudoses.usersIdLike.length - newsOne.kudoses.usersIdDislike.length;
@@ -93,9 +95,7 @@ export async function editNewsService(title, textBody, file, newsId) {
 
 export async function getAllNewsService() {
 	try {
-		const newsDB = await News.find()
-			.populate('comments')
-			.populate({ path: 'postedBy', select: 'username' });
+		const newsDB = await News.find().populate({ path: 'postedBy', select: 'username' });
 		newsDB.reverse();
 
 		return { message: `Все новости`, data: newsDB };
@@ -108,7 +108,8 @@ export async function getAllNewsService() {
 export async function deleteNewsService(newsId) {
 	try {
 		const newsDB = await News.findOneAndDelete({ _id: newsId });
-
+		await KudosNews.findOneAndDelete({ _id: newsDB.kudoses });
+		await CommentNews.deleteMany({ newsId: newsDB._id });
 		const pathToImage = path.resolve(__dirname, 'build', newsDB.image);
 		fs.unlinkSync(pathToImage, error => {
 			if (error) throw error;
