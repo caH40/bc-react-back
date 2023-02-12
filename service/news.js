@@ -15,20 +15,7 @@ export async function getNewsService(page, newsOnPage) {
 		const quantityPages = Math.ceil(newsDB.length / newsOnPage);
 		const newsCurrentPage = newsDB.slice(newsOnPage * page - newsOnPage, newsOnPage * page);
 
-		const news = newsCurrentPage.map(newsOne => {
-			newsOne = newsOne.toObject();
-			const likeQuantity =
-				newsOne.kudoses.usersIdLike.length - newsOne.kudoses.usersIdDislike.length;
-			newsOne.likeQuantity = likeQuantity > 0 ? likeQuantity : 0;
-			return newsOne;
-		});
-
-		for (const newsOne of news) {
-			const comments = await CommentNews.find({ newsId: newsOne._id });
-			newsOne.commentsQuantity = comments?.length;
-		}
-
-		return { message: `Новости`, data: { news, quantityPages } };
+		return { message: `Новости`, data: { news: newsCurrentPage, quantityPages } };
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. getNewsService()';
@@ -37,12 +24,9 @@ export async function getNewsService(page, newsOnPage) {
 
 export async function getNewsOneService(newsId) {
 	try {
-		const newsDB = await News.findOne({ _id: newsId }).populate('kudoses');
-		const newsOne = newsDB.toObject();
-		const likeQuantity =
-			newsOne.kudoses.usersIdLike.length - newsOne.kudoses.usersIdDislike.length;
-		newsOne.likeQuantity = likeQuantity > 0 ? likeQuantity : 0;
-		return { message: `Новость`, data: newsOne };
+		const newsDB = await News.findOne({ _id: newsId });
+
+		return { message: `Новость`, data: newsDB };
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. getNewsService()';
@@ -123,5 +107,63 @@ export async function deleteNewsService(newsId) {
 	} catch (error) {
 		console.log(error);
 		throw 'Непредвиденная ошибка на сервере. deleteNewsService()';
+	}
+}
+
+export async function getNewsInteractiveService(newsId, userId) {
+	try {
+		const newsDB = await News.findOne({ _id: newsId });
+
+		const interactive = {};
+		const commentsDB = await CommentNews.find({ newsId });
+		interactive.comments = { quantity: commentsDB?.length };
+
+		const kudosDB = await KudosNews.findOne({ _id: newsDB.kudoses });
+
+		const likeQuantity = kudosDB.usersIdLike?.length - kudosDB.usersIdDislike?.length;
+		interactive.likes = {
+			quantity: likeQuantity > 0 ? likeQuantity : 0,
+			userLiked: kudosDB.usersIdLike?.includes(userId),
+			userDisliked: kudosDB.usersIdDislike?.includes(userId),
+		};
+
+		return { message: 'Количество лайков и комментариев к новости', interactive };
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function postNewsInteractiveService(newsId, target, userId) {
+	try {
+		const kudosDB = await KudosNews.findOne({ newsId });
+		if (!kudosDB) throw 'Не найден документ Kudos для новости';
+		let changeDocument = {};
+		if (target === 'like' && !kudosDB.usersIdLike.includes(userId))
+			changeDocument = { $push: { usersIdLike: userId }, $pull: { usersIdDislike: userId } };
+
+		if (target === 'like' && kudosDB.usersIdLike.includes(userId))
+			changeDocument = { $pull: { usersIdLike: userId, usersIdDislike: userId } };
+
+		if (target === 'dislike' && !kudosDB.usersIdDislike.includes(userId))
+			changeDocument = { $pull: { usersIdLike: userId }, $push: { usersIdDislike: userId } };
+
+		if (target === 'dislike' && kudosDB.usersIdDislike.includes(userId))
+			changeDocument = { $pull: { usersIdLike: userId, usersIdDislike: userId } };
+
+		const kudosSavedDB = await KudosNews.findOneAndUpdate({ newsId }, changeDocument, {
+			returnDocument: 'after',
+		});
+
+		const interactive = {};
+		const likeQuantity = kudosSavedDB.usersIdLike?.length - kudosSavedDB.usersIdDislike?.length;
+		interactive.likes = {
+			quantity: likeQuantity > 0 ? likeQuantity : 0,
+			userLiked: kudosSavedDB.usersIdLike?.includes(userId),
+			userDisliked: kudosSavedDB.usersIdDislike?.includes(userId),
+		};
+
+		return { message: 'Количество лайков и комментариев к новости', interactive };
+	} catch (error) {
+		throw error;
 	}
 }
