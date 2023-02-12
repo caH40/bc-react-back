@@ -20,3 +20,16 @@ export async function checkAuth(req, res, next) {
 		return res.status(401).json({ message: 'Необходима авторизация' });
 	}
 }
+
+export async function getAuth(req, res, next) {
+	try {
+		const { authorization } = req.headers;
+		const accessToken = authorization?.split(' ')[1];
+		const isValidAccessToken = validateAccessToken(accessToken);
+		req.params.userId = isValidAccessToken?.id;
+		return next();
+	} catch (error) {
+		console.log(error);
+		return next();
+	}
+}

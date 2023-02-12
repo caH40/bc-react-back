@@ -20,6 +20,11 @@ import {
 	postNewsService,
 } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
+import {
+	getCommentsNewsService,
+	postCommentDeleteNewsService,
+	postCommentNewsService,
+} from '../service/comments.js';
 
 const __dirname = path.resolve();
 
@@ -39,8 +44,9 @@ export async function getTrails(req, res) {
 export async function getTrail(req, res) {
 	try {
 		const { id: trailId, type } = req.query;
+		const { userId } = req.params;
 
-		const trail = await getTrailService(trailId, type);
+		const trail = await getTrailService(trailId, type, userId);
 		res.status(200).json({ message: trail.message, trail: trail.data });
 	} catch (error) {
 		console.log(error);
@@ -252,6 +258,48 @@ export async function deleteTrail(req, res) {
 		const { trailId } = req.body;
 		const trails = await deleteTrailService(trailId);
 		res.status(200).json({ message: trails.message });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postCommentNews(req, res) {
+	try {
+		const { userId } = req.params;
+		const { comment, newsId } = req.body;
+		const savedComment = await postCommentNewsService(comment, userId, newsId);
+		res.status(200).json({ message: savedComment.message });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function getCommentsNews(req, res) {
+	try {
+		const { newsId } = req.params;
+		const comments = await getCommentsNewsService(newsId);
+		res.status(200).json({ message: comments.message, comments: comments.data });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postCommentDeleteNews(req, res) {
+	try {
+		const { commentId } = req.body;
+		const { userId } = req.params;
+
+		const comment = await postCommentDeleteNewsService(commentId, userId);
+		res.status(200).json({ message: comment.message });
 	} catch (error) {
 		console.log(error);
 		return res

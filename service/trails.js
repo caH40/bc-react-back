@@ -5,6 +5,7 @@ import { Card } from '../Model/Card.js';
 import { Comment } from '../Model/Comment.js';
 import { Kudos } from '../Model/Kudos.js';
 import { Photos } from '../Model/Photo.js';
+import { countViewsTrail } from './views.js';
 
 const __dirname = path.resolve();
 
@@ -35,7 +36,7 @@ export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 	}
 }
 
-export async function getTrailService(trailId, type) {
+export async function getTrailService(trailId, type, userId) {
 	try {
 		let cardDB = {};
 		if (type === 'edit') {
@@ -44,6 +45,7 @@ export async function getTrailService(trailId, type) {
 			cardDB = await Card.findOne({ _id: trailId }, { cardPhoto: false })
 				.populate('kudoses')
 				.populate('postedBy');
+			await countViewsTrail(cardDB.kudoses._id, userId).catch(error => console.log(error));
 		}
 
 		if (!cardDB) throw `Маршрут не найден ${trailId}`;
