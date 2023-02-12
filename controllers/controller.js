@@ -18,6 +18,7 @@ import {
 	getNewsOneService,
 	getNewsService,
 	postNewsService,
+	getNewsInteractiveService,
 } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
 import {
@@ -300,6 +301,20 @@ export async function postCommentDeleteNews(req, res) {
 
 		const comment = await postCommentDeleteNewsService(commentId, userId);
 		res.status(200).json({ message: comment.message });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function getNewsInteractive(req, res) {
+	try {
+		const { newsId, userId } = req.params;
+
+		const interactive = await getNewsInteractiveService(newsId, userId);
+		res.status(200).json(interactive);
 	} catch (error) {
 		console.log(error);
 		return res
