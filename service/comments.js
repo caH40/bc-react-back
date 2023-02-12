@@ -1,4 +1,5 @@
 import { CommentNews } from '../Model/CommentNews.js';
+import { User } from '../Model/User.js';
 
 export async function postCommentNewsService(comment, userId, newsId) {
 	try {
@@ -21,7 +22,7 @@ export async function getCommentsNewsService(newsId) {
 			path: 'postedBy',
 			select: ['username', 'firstName', 'lastName', 'photoProfile'],
 		});
-		if (!commentsDB.length) throw 'Комментарии к новости не найдены!';
+
 		commentsDB.reverse();
 		return { message: 'Комментарии к новости!', data: commentsDB };
 	} catch (error) {
@@ -31,7 +32,12 @@ export async function getCommentsNewsService(newsId) {
 
 export async function postCommentDeleteNewsService(commentId, userId) {
 	try {
-		const commentDB = await CommentNews.findOneAndDelete({ _id: commentId, postedBy: userId });
+		const userDB = await User.findOne({ _id: userId });
+		const filter = ['moderator', 'admin'].includes(userDB.role)
+			? { _id: commentId }
+			: { _id: commentId, postedBy: userId };
+
+		const commentDB = await CommentNews.findOneAndDelete(filter);
 		if (!commentDB) throw 'Комментарий к новости не найден!';
 		return { message: 'Ваш комментарии к новости удалён!' };
 	} catch (error) {
