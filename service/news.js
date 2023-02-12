@@ -5,7 +5,6 @@ const __dirname = path.resolve();
 
 import { KudosNews } from '../Model/KudosNews.js';
 import { News } from '../Model/News.js';
-import { Kudos } from '../Model/Kudos.js';
 import { CommentNews } from '../Model/CommentNews.js';
 
 export async function getNewsService(page, newsOnPage) {
@@ -23,6 +22,11 @@ export async function getNewsService(page, newsOnPage) {
 			newsOne.likeQuantity = likeQuantity > 0 ? likeQuantity : 0;
 			return newsOne;
 		});
+
+		for (const newsOne of news) {
+			const comments = await CommentNews.find({ newsId: newsOne._id });
+			newsOne.commentsQuantity = comments?.length;
+		}
 
 		return { message: `Новости`, data: { news, quantityPages } };
 	} catch (error) {
