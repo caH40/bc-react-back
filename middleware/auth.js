@@ -8,6 +8,7 @@ export async function checkAuth(req, res, next) {
 
 		const isValidAccessToken = validateAccessToken(accessToken);
 		if (!isValidAccessToken) return res.status(401).json({ message: 'Неактуальный accessToken' });
+		req.params.userId = isValidAccessToken?.id;
 
 		return next();
 

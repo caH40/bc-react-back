@@ -132,3 +132,38 @@ export async function getNewsInteractiveService(newsId, userId) {
 		throw error;
 	}
 }
+
+export async function postNewsInteractiveService(newsId, target, userId) {
+	try {
+		const kudosDB = await KudosNews.findOne({ newsId });
+		if (!kudosDB) throw 'Не найден документ Kudos для новости';
+		let changeDocument = {};
+		if (target === 'like' && !kudosDB.usersIdLike.includes(userId))
+			changeDocument = { $push: { usersIdLike: userId }, $pull: { usersIdDislike: userId } };
+
+		if (target === 'like' && kudosDB.usersIdLike.includes(userId))
+			changeDocument = { $pull: { usersIdLike: userId, usersIdDislike: userId } };
+
+		if (target === 'dislike' && !kudosDB.usersIdDislike.includes(userId))
+			changeDocument = { $pull: { usersIdLike: userId }, $push: { usersIdDislike: userId } };
+
+		if (target === 'dislike' && kudosDB.usersIdDislike.includes(userId))
+			changeDocument = { $pull: { usersIdLike: userId, usersIdDislike: userId } };
+
+		const kudosSavedDB = await KudosNews.findOneAndUpdate({ newsId }, changeDocument, {
+			returnDocument: 'after',
+		});
+
+		const interactive = {};
+		const likeQuantity = kudosSavedDB.usersIdLike?.length - kudosSavedDB.usersIdDislike?.length;
+		interactive.likes = {
+			quantity: likeQuantity > 0 ? likeQuantity : 0,
+			userLiked: kudosSavedDB.usersIdLike?.includes(userId),
+			userDisliked: kudosSavedDB.usersIdDislike?.includes(userId),
+		};
+
+		return { message: 'Количество лайков и комментариев к новости', interactive };
+	} catch (error) {
+		throw error;
+	}
+}

@@ -19,6 +19,7 @@ import {
 	getNewsService,
 	postNewsService,
 	getNewsInteractiveService,
+	postNewsInteractiveService,
 } from '../service/news.js';
 import { postLikesService } from '../service/likes.js';
 import {
@@ -314,6 +315,20 @@ export async function getNewsInteractive(req, res) {
 		const { newsId, userId } = req.params;
 
 		const interactive = await getNewsInteractiveService(newsId, userId);
+		res.status(200).json(interactive);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postNewsInteractive(req, res) {
+	try {
+		const { userId } = req.params;
+		const { newsId, target } = req.body;
+
+		const interactive = await postNewsInteractiveService(newsId, target, userId);
 		res.status(200).json(interactive);
 	} catch (error) {
 		console.log(error);
