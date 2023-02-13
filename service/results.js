@@ -28,9 +28,12 @@ export async function getResultsService(eventId) {
 	}
 }
 
-export async function getResultsAthleteService(athlete) {
+export async function getResultsAthleteService(athlete, userId) {
 	try {
-		const resultsDB = await Result.find({ athlete });
+		if (!athlete && !userId) return;
+		const filter = athlete ? { athlete } : { userId };
+
+		const resultsDB = await Result.find(filter);
 		const results = resultsDB.map(result => result.toObject());
 
 		for (let i = 0; i < results.length; i++) {

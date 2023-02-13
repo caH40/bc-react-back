@@ -27,6 +27,7 @@ import {
 	postCommentDeleteNewsService,
 	postCommentNewsService,
 } from '../service/comments.js';
+import { getUserService } from '../service/user.js';
 
 const __dirname = path.resolve();
 
@@ -84,8 +85,8 @@ export async function getResults(req, res) {
 
 export async function getResultsAthlete(req, res) {
 	try {
-		const { athlete } = req.query;
-		const results = await getResultsAthleteService(athlete);
+		const { athlete, userId } = req.query;
+		const results = await getResultsAthleteService(athlete, userId);
 		res.status(200).json({ message: results.message, results: results.data });
 	} catch (error) {
 		console.log(error);
@@ -330,6 +331,19 @@ export async function postNewsInteractive(req, res) {
 
 		const interactive = await postNewsInteractiveService(newsId, target, userId);
 		res.status(200).json(interactive);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function getUser(req, res) {
+	try {
+		const { userId } = req.params;
+
+		const user = await getUserService(userId);
+		res.status(200).json(user);
 	} catch (error) {
 		console.log(error);
 		return res
