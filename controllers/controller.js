@@ -27,7 +27,7 @@ import {
 	postCommentDeleteNewsService,
 	postCommentNewsService,
 } from '../service/comments.js';
-import { getUserService } from '../service/user.js';
+import { getUserService, postUserDataService } from '../service/user.js';
 
 const __dirname = path.resolve();
 
@@ -343,6 +343,20 @@ export async function getUser(req, res) {
 		const { userId } = req.params;
 
 		const user = await getUserService(userId);
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postUserData(req, res) {
+	try {
+		const { userId } = req.params;
+		const { formUser } = req.body;
+
+		const user = await postUserDataService(formUser, userId);
 		res.status(200).json(user);
 	} catch (error) {
 		console.log(error);
