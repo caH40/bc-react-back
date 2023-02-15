@@ -28,8 +28,9 @@ import {
 	getUsers,
 	postUserData,
 	moderateUserData,
+	deleteUser,
 } from '../controllers/controller.js';
-import { authModerator } from '../middleware/authModerator.js';
+import { authModerator, authAdmin } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
 import { checkAuth, getAuth } from '../middleware/auth.js';
 
@@ -58,7 +59,8 @@ router.post('/comments-delete', getAuth, postCommentDeleteNews);
 router.get('/news-interactive-get/:newsId', getAuth, getNewsInteractive);
 router.post('/news-interactive', checkAuth, postNewsInteractive);
 router.get('/user', checkAuth, getUser);
-router.get('/user/:userIdForModerate', authModerator, getUserForModerate);
-router.get('/users', authModerator, getUsers);
+router.get('/user/:userIdForModerate', authAdmin, getUserForModerate);
+router.get('/users', authAdmin, getUsers);
 router.post('/user-post', checkAuth, postUserData);
-router.post('/user-moderate', authModerator, moderateUserData);
+router.post('/user-moderate', authAdmin, moderateUserData);
+router.delete('/user-delete', authAdmin, deleteUser);

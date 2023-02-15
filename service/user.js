@@ -50,3 +50,13 @@ export async function postUserDataService(formUser, userId) {
 		throw error;
 	}
 }
+
+export async function deleteUserService(userId) {
+	try {
+		const userDB = await User.findOneAndDelete({ _id: userId });
+		if (!userDB) throw 'Пользователь не найден';
+		return { message: `Пользователь ${userDB.username} удалён!`, user: userDB };
+	} catch (error) {
+		throw error;
+	}
+}
