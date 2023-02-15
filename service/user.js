@@ -31,6 +31,7 @@ export async function postUserDataService(formUser, userId) {
 					city: formUser.city,
 					team: formUser.team,
 					email: formUser.email,
+					role: formUser.role,
 					photoProfile: formUser.photoProfile.source,
 				},
 			},

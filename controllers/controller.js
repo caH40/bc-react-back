@@ -351,6 +351,19 @@ export async function getUser(req, res) {
 			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
 	}
 }
+export async function getUserForModerate(req, res) {
+	try {
+		const { userId, userIdForModerate } = req.params;
+
+		const user = await getUserService(userIdForModerate ?? userId);
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
 export async function getUsers(req, res) {
 	try {
 		const users = await getUsersService();
@@ -366,6 +379,19 @@ export async function postUserData(req, res) {
 	try {
 		const { userId } = req.params;
 		const { formUser } = req.body;
+
+		const user = await postUserDataService(formUser, userId);
+		res.status(200).json(user);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function moderateUserData(req, res) {
+	try {
+		const { formUser, userId } = req.body;
 
 		const user = await postUserDataService(formUser, userId);
 		res.status(200).json(user);
