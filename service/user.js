@@ -8,6 +8,14 @@ export async function getUserService(userId) {
 		throw error;
 	}
 }
+export async function getUsersService() {
+	try {
+		const usersDB = await User.find();
+		return { message: 'Пользователи найдены', users: usersDB };
+	} catch (error) {
+		throw error;
+	}
+}
 export async function postUserDataService(formUser, userId) {
 	try {
 		const userDB = await User.findOneAndUpdate(
@@ -23,6 +31,7 @@ export async function postUserDataService(formUser, userId) {
 					city: formUser.city,
 					team: formUser.team,
 					email: formUser.email,
+					role: formUser.role,
 					photoProfile: formUser.photoProfile.source,
 				},
 			},
@@ -37,6 +46,16 @@ export async function postUserDataService(formUser, userId) {
 		};
 
 		return { message: 'Данные пользователя сохранены!', user };
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function deleteUserService(userId) {
+	try {
+		const userDB = await User.findOneAndDelete({ _id: userId });
+		if (!userDB) throw 'Пользователь не найден';
+		return { message: `Пользователь ${userDB.username} удалён!`, user: userDB };
 	} catch (error) {
 		throw error;
 	}
