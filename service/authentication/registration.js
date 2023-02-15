@@ -21,6 +21,7 @@ export async function registrationService(username, email, password) {
 			email,
 			password: hashPassword,
 			role: 'user',
+			date: Date.now(),
 		});
 
 		await UserConfirm.create({

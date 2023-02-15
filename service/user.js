@@ -8,6 +8,14 @@ export async function getUserService(userId) {
 		throw error;
 	}
 }
+export async function getUsersService() {
+	try {
+		const usersDB = await User.find();
+		return { message: 'Пользователи найдены', users: usersDB };
+	} catch (error) {
+		throw error;
+	}
+}
 export async function postUserDataService(formUser, userId) {
 	try {
 		const userDB = await User.findOneAndUpdate(

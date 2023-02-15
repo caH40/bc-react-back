@@ -24,6 +24,7 @@ import {
 	getNewsInteractive,
 	postNewsInteractive,
 	getUser,
+	getUsers,
 	postUserData,
 } from '../controllers/controller.js';
 import { authModerator } from '../middleware/authModerator.js';
@@ -55,4 +56,5 @@ router.post('/comments-delete', getAuth, postCommentDeleteNews);
 router.get('/news-interactive-get/:newsId', getAuth, getNewsInteractive);
 router.post('/news-interactive', checkAuth, postNewsInteractive);
 router.get('/user', checkAuth, getUser);
+router.get('/users', authModerator, getUsers);
 router.post('/user-post', checkAuth, postUserData);

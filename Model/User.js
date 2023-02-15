@@ -4,6 +4,7 @@ const { Schema, model } = prk;
 const userSchema = new Schema({
 	username: { type: String, unique: true, required: true },
 	password: { type: String, required: true },
+	date: { type: Number },
 	email: { type: String, unique: true, required: true },
 	emailConfirm: { type: Boolean, default: false },
 	phone: { type: String },
