@@ -1,4 +1,4 @@
-import Event from '../Model/Event.js';
+import { Event } from '../Model/Event.js';
 import { Result } from '../Model/Result.js';
 import { convertTime, secondesToTime } from './utils/date-convert.js';
 import { gapValue } from './utils/gap.js';

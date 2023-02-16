@@ -2,11 +2,12 @@ import pkg from 'mongoose';
 const { Schema, model } = pkg;
 
 const eventSchema = new Schema({
-  eventId: { type: String, required: true },
-  eventName: { type: String, required: true },
-  eventDate: { type: String, required: true },
-  eventCity: { type: String, required: true },
-  segmentStrava: { type: String },
+	eventName: { type: String, unique: true },
+	eventDate: { type: String },
+	eventCity: { type: String },
+	type: { type: String },
+	distance: { type: Number },
+	segmentStrava: { type: String },
 });
 
-export default model('Event', eventSchema);
+export const Event = model('Event', eventSchema);

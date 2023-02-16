@@ -3,9 +3,9 @@ import pkg from 'mongoose';
 const { Schema, model } = pkg;
 
 const resultSchema = new Schema({
-	eventId: { type: String },
+	eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event' },
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-	place: { type: Number },
+	place: { type: String },
 	number: { type: Number },
 	athlete: { type: String },
 	athleteCity: { type: String, default: 'nope' },
