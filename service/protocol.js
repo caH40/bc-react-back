@@ -4,7 +4,7 @@ import { Result } from '../Model/Result.js';
 export async function postProtocolService(results, event) {
 	try {
 		const eventDB = await Event.create(event);
-
+		results.forEach(result => delete result._id);
 		for (let result of results) {
 			await Result.create({ ...result, eventId: eventDB._id }).catch(e => console.log(e));
 		}

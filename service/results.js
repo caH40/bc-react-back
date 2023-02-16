@@ -6,7 +6,7 @@ import { gapValue } from './utils/gap.js';
 export async function getResultsService(eventId) {
 	try {
 		const resultsDB = await Result.find({ eventId });
-		const eventDB = await Event.findOne({ eventId });
+		const eventDB = await Event.findOne({ _id: eventId });
 
 		const results = resultsDB.map(result => {
 			result = result.toObject();
@@ -34,14 +34,16 @@ export async function getResultsAthleteService(athlete, userId) {
 		const filter = athlete ? { athlete } : { userId };
 
 		const resultsDB = await Result.find(filter);
+
 		const results = resultsDB.map(result => result.toObject());
 
+		// const time = new Date().getTime();
 		for (let i = 0; i < results.length; i++) {
-			const { eventName, eventDate } = await Event.findOne({ eventId: results[i].eventId });
+			const { eventName, eventDate } = await Event.findOne({ _id: results[i].eventId });
 			results[i].eventName = eventName;
 			results[i].eventDate = eventDate;
 		}
-
+		// console.log(new Date().getTime() - time);
 		return { message: `Результаты заездов спортсмена ${athlete}`, data: results };
 	} catch (error) {
 		console.log(error);
