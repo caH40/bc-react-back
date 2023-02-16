@@ -15,3 +15,20 @@ export async function postProtocolService(results, event) {
 		throw 'Непредвиденная ошибка на сервере. postProtocolService()';
 	}
 }
+export async function deleteProtocolService(eventId) {
+	try {
+		let message = '';
+		const resultsDB = await Result.deleteMany({ eventId });
+		if (resultsDB.deletedCount === 0) message = `Результаты соревнования ${eventId} не найдены; `;
+
+		const eventDB = await Event.findByIdAndDelete(eventId);
+		if (!eventDB) message += `Ошибка при удалении описания соревнования ${eventId} `;
+
+		return {
+			message: message ? message : `Соревнование и результаты "${eventDB.eventName}" удалены`,
+		};
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. deleteProtocolService()';
+	}
+}

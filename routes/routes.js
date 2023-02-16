@@ -30,6 +30,7 @@ import {
 	moderateUserData,
 	deleteUser,
 	postProtocol,
+	deleteProtocol,
 } from '../controllers/controller.js';
 import { authModerator, authAdmin } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
@@ -66,3 +67,4 @@ router.post('/user-post', checkAuth, postUserData);
 router.post('/user-moderate', authAdmin, moderateUserData);
 router.delete('/user-delete', authAdmin, deleteUser);
 router.post('/protocol', authAdmin, postProtocol);
+router.delete('/event', authAdmin, deleteProtocol);
