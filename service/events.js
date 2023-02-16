@@ -1,4 +1,4 @@
-import Event from '../Model/Event.js';
+import { Event } from '../Model/Event.js';
 import { Result } from '../Model/Result.js';
 
 export async function getEventsService() {
@@ -7,7 +7,10 @@ export async function getEventsService() {
 		const resultsDB = await Result.find();
 		const events = eventsDB.map(event => {
 			event = event.toObject();
-			const quantityRiders = resultsDB.filter(result => result.eventId === event.eventId).length;
+
+			const quantityRiders = resultsDB.filter(
+				result => result.eventId.toString() === event._id.toString()
+			).length;
 			event.quantityRiders = quantityRiders;
 			return event;
 		});

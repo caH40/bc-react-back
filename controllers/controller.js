@@ -33,6 +33,7 @@ import {
 	getUsersService,
 	postUserDataService,
 } from '../service/user.js';
+import { postProtocolService } from '../service/protocol.js';
 
 const __dirname = path.resolve();
 
@@ -413,6 +414,18 @@ export async function deleteUser(req, res) {
 
 		const user = await deleteUserService(userId);
 		res.status(200).json(user);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postProtocol(req, res) {
+	try {
+		const { results, event } = req.body;
+		const savedProtocol = await postProtocolService(results, event);
+		res.status(201).json(savedProtocol);
 	} catch (error) {
 		console.log(error);
 		return res
