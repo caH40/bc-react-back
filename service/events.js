@@ -16,7 +16,24 @@ export async function getEventsService() {
 		});
 		return { message: 'Список соревнований', data: events };
 	} catch (error) {
-		console.log(error);
-		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
+		throw 'Непредвиденная ошибка на сервере. getEventsService()';
+	}
+}
+
+export async function getEventService(eventId) {
+	try {
+		const eventDB = await Event.findOne({ _id: eventId });
+		return { message: 'Описание соревнования', event: eventDB };
+	} catch (error) {
+		throw 'Непредвиденная ошибка на сервере. getEventService()';
+	}
+}
+
+export async function postEventService(eventId, event) {
+	try {
+		const eventDB = await Event.findOneAndUpdate({ _id: eventId }, { $set: event });
+		return { message: 'Изменения соревнования сохранены!', event: eventDB };
+	} catch (error) {
+		throw 'Непредвиденная ошибка на сервере. postEventService()';
 	}
 }

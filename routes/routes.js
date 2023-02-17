@@ -4,6 +4,7 @@ import {
 	getTrails,
 	getTrail,
 	getEvents,
+	getEvent,
 	getResults,
 	getResultsAthlete,
 	getTrek,
@@ -31,6 +32,7 @@ import {
 	deleteUser,
 	postProtocol,
 	deleteProtocol,
+	postEvent,
 } from '../controllers/controller.js';
 import { authModerator, authAdmin } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
@@ -41,6 +43,7 @@ export const router = new Router();
 router.post('/trails', getTrails);
 router.get('/trail', getAuth, getTrail);
 router.get('/events', getEvents);
+router.get('/event/:eventId', getEvent);
 router.get('/results', getResults);
 router.get('/athlete/results', getResultsAthlete);
 router.get('/gettrek', getTrek);
@@ -68,3 +71,4 @@ router.post('/user-moderate', authAdmin, moderateUserData);
 router.delete('/user-delete', authAdmin, deleteUser);
 router.post('/protocol', authAdmin, postProtocol);
 router.delete('/event', authAdmin, deleteProtocol);
+router.post('/event', authAdmin, postEvent);

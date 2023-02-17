@@ -1,4 +1,4 @@
-import { getEventsService } from '../service/events.js';
+import { getEventService, getEventsService, postEventService } from '../service/events.js';
 import { getResultsAthleteService, getResultsService } from '../service/results.js';
 import {
 	deleteTrailService,
@@ -68,6 +68,19 @@ export async function getEvents(req, res) {
 	try {
 		const events = await getEventsService();
 		res.status(200).json({ message: events.message, events: events.data });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function getEvent(req, res) {
+	try {
+		const { eventId } = req.params;
+		const event = await getEventService(eventId);
+		res.status(200).json(event);
 	} catch (error) {
 		console.log(error);
 		return res
@@ -439,6 +452,19 @@ export async function deleteProtocol(req, res) {
 		const deletedProtocol = await deleteProtocolService(eventId);
 
 		res.status(200).json(deletedProtocol);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postEvent(req, res) {
+	try {
+		const { eventId, event } = req.body;
+		const eventResponse = await postEventService(eventId, event);
+
+		res.status(201).json(eventResponse);
 	} catch (error) {
 		console.log(error);
 		return res
