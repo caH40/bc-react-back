@@ -4,6 +4,8 @@ import {
 	getResultsService,
 	getResultService,
 	postResultService,
+	postAddResultService,
+	deleteResultService,
 } from '../service/results.js';
 import {
 	deleteTrailService,
@@ -124,6 +126,30 @@ export async function postResult(req, res) {
 	try {
 		const { resultForm } = req.body;
 		const resultResponse = await postResultService(resultForm);
+		res.status(200).json(resultResponse);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postAddResult(req, res) {
+	try {
+		const { resultForm } = req.body;
+		const resultResponse = await postAddResultService(resultForm);
+		res.status(200).json(resultResponse);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function deleteResult(req, res) {
+	try {
+		const { resultId } = req.body;
+		const resultResponse = await deleteResultService(resultId);
 		res.status(200).json(resultResponse);
 	} catch (error) {
 		console.log(error);

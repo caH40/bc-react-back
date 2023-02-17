@@ -8,6 +8,8 @@ import {
 	getResults,
 	getResult,
 	postResult,
+	deleteResult,
+	postAddResult,
 	getResultsAthlete,
 	getTrek,
 	getWebcam,
@@ -48,7 +50,9 @@ router.get('/events', getEvents);
 router.get('/event/:eventId', getEvent);
 router.get('/results/:eventId', getResults);
 router.get('/result/:resultId', getResult);
-router.post('/result', postResult);
+router.post('/result', authModerator, postResult);
+router.delete('/result', authModerator, deleteResult);
+router.post('/result-add', authModerator, postAddResult);
 router.get('/athlete/results', getResultsAthlete);
 router.get('/gettrek', getTrek);
 router.get('/webcam/:numberCam', getWebcam);

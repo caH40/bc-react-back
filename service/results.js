@@ -48,6 +48,26 @@ export async function postResultService(resultForm) {
 	}
 }
 
+export async function postAddResultService(resultForm) {
+	try {
+		await Result.create(resultForm);
+		return { message: 'Добавлен результат соревнования!' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postAddResultService()';
+	}
+}
+
+export async function deleteResultService(resultId) {
+	try {
+		await Result.findOneAndDelete(resultId);
+		return { message: 'Удален результат соревнования!' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postAddResultService()';
+	}
+}
+
 export async function getResultsAthleteService(athlete, userId) {
 	try {
 		if (!athlete && !userId) return;
