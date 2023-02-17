@@ -4,7 +4,12 @@ import {
 	getTrails,
 	getTrail,
 	getEvents,
+	getEvent,
 	getResults,
+	getResult,
+	postResult,
+	deleteResult,
+	postAddResult,
 	getResultsAthlete,
 	getTrek,
 	getWebcam,
@@ -31,6 +36,7 @@ import {
 	deleteUser,
 	postProtocol,
 	deleteProtocol,
+	postEvent,
 } from '../controllers/controller.js';
 import { authModerator, authAdmin } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
@@ -41,7 +47,12 @@ export const router = new Router();
 router.post('/trails', getTrails);
 router.get('/trail', getAuth, getTrail);
 router.get('/events', getEvents);
-router.get('/results', getResults);
+router.get('/event/:eventId', getEvent);
+router.get('/results/:eventId', getResults);
+router.get('/result/:resultId', getResult);
+router.post('/result', authModerator, postResult);
+router.delete('/result', authModerator, deleteResult);
+router.post('/result-add', authModerator, postAddResult);
 router.get('/athlete/results', getResultsAthlete);
 router.get('/gettrek', getTrek);
 router.get('/webcam/:numberCam', getWebcam);
@@ -68,3 +79,4 @@ router.post('/user-moderate', authAdmin, moderateUserData);
 router.delete('/user-delete', authAdmin, deleteUser);
 router.post('/protocol', authAdmin, postProtocol);
 router.delete('/event', authAdmin, deleteProtocol);
+router.post('/event', authAdmin, postEvent);

@@ -4,7 +4,11 @@ import { Result } from '../Model/Result.js';
 export async function postProtocolService(results, event) {
 	try {
 		const eventDB = await Event.create(event);
-		results.forEach(result => delete result._id);
+		results.forEach(result => {
+			delete result._id;
+
+			if (isNaN(+result.place)) result.place = null;
+		});
 		for (let result of results) {
 			await Result.create({ ...result, eventId: eventDB._id }).catch(e => console.log(e));
 		}

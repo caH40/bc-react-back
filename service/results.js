@@ -27,6 +27,46 @@ export async function getResultsService(eventId) {
 		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
 	}
 }
+export async function getResultService(resultId) {
+	try {
+		const resultDB = await Result.findOne({ _id: resultId });
+		return { message: 'Результаты заезда спортсмена', result: resultDB };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
+	}
+}
+export async function postResultService(resultForm) {
+	try {
+		const _id = resultForm._id;
+		delete resultForm._id;
+		await Result.findOneAndUpdate({ _id }, { $set: resultForm });
+		return { message: 'Сохранены изменения в результате заезда' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postResultService()';
+	}
+}
+
+export async function postAddResultService(resultForm) {
+	try {
+		await Result.create(resultForm);
+		return { message: 'Добавлен результат соревнования!' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postAddResultService()';
+	}
+}
+
+export async function deleteResultService(resultId) {
+	try {
+		await Result.findOneAndDelete(resultId);
+		return { message: 'Удален результат соревнования!' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postAddResultService()';
+	}
+}
 
 export async function getResultsAthleteService(athlete, userId) {
 	try {

@@ -1,5 +1,12 @@
-import { getEventsService } from '../service/events.js';
-import { getResultsAthleteService, getResultsService } from '../service/results.js';
+import { getEventService, getEventsService, postEventService } from '../service/events.js';
+import {
+	getResultsAthleteService,
+	getResultsService,
+	getResultService,
+	postResultService,
+	postAddResultService,
+	deleteResultService,
+} from '../service/results.js';
 import {
 	deleteTrailService,
 	getTrailsEditService,
@@ -76,11 +83,74 @@ export async function getEvents(req, res) {
 	}
 }
 
+export async function getEvent(req, res) {
+	try {
+		const { eventId } = req.params;
+		const event = await getEventService(eventId);
+		res.status(200).json(event);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
 export async function getResults(req, res) {
 	try {
-		const { id } = req.query;
-		const results = await getResultsService(id);
+		const { eventId } = req.params;
+		const results = await getResultsService(eventId);
 		res.status(200).json({ message: results.message, results: results.data });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function getResult(req, res) {
+	try {
+		const { resultId } = req.params;
+		const result = await getResultService(resultId);
+		res.status(200).json(result);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postResult(req, res) {
+	try {
+		const { resultForm } = req.body;
+		const resultResponse = await postResultService(resultForm);
+		res.status(200).json(resultResponse);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postAddResult(req, res) {
+	try {
+		const { resultForm } = req.body;
+		const resultResponse = await postAddResultService(resultForm);
+		res.status(200).json(resultResponse);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function deleteResult(req, res) {
+	try {
+		const { resultId } = req.body;
+		const resultResponse = await deleteResultService(resultId);
+		res.status(200).json(resultResponse);
 	} catch (error) {
 		console.log(error);
 		return res
@@ -439,6 +509,19 @@ export async function deleteProtocol(req, res) {
 		const deletedProtocol = await deleteProtocolService(eventId);
 
 		res.status(200).json(deletedProtocol);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function postEvent(req, res) {
+	try {
+		const { eventId, event } = req.body;
+		const eventResponse = await postEventService(eventId, event);
+
+		res.status(201).json(eventResponse);
 	} catch (error) {
 		console.log(error);
 		return res
