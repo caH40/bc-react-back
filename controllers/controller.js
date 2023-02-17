@@ -1,5 +1,9 @@
 import { getEventService, getEventsService, postEventService } from '../service/events.js';
-import { getResultsAthleteService, getResultsService } from '../service/results.js';
+import {
+	getResultsAthleteService,
+	getResultsService,
+	getResultService,
+} from '../service/results.js';
 import {
 	deleteTrailService,
 	getTrailsEditService,
@@ -91,9 +95,22 @@ export async function getEvent(req, res) {
 
 export async function getResults(req, res) {
 	try {
-		const { id } = req.query;
-		const results = await getResultsService(id);
+		const { eventId } = req.params;
+		const results = await getResultsService(eventId);
 		res.status(200).json({ message: results.message, results: results.data });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function getResult(req, res) {
+	try {
+		const { resultId } = req.params;
+		const result = await getResultService(resultId);
+		res.status(200).json(result);
 	} catch (error) {
 		console.log(error);
 		return res

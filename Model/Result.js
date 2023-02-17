@@ -13,6 +13,7 @@ const resultSchema = new Schema({
 	distance: { type: Number },
 	timeTotal: { type: String },
 	birthday: { type: String, default: 'nope' },
+	gender: { type: String, default: 'nope' },
 });
 
 export const Result = model('Result', resultSchema);

@@ -27,6 +27,15 @@ export async function getResultsService(eventId) {
 		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
 	}
 }
+export async function getResultService(resultId) {
+	try {
+		const resultDB = await Result.findOne({ _id: resultId });
+		return { message: 'Результаты заезда спортсмена', result: resultDB };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
+	}
+}
 
 export async function getResultsAthleteService(athlete, userId) {
 	try {

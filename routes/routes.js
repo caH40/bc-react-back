@@ -6,6 +6,7 @@ import {
 	getEvents,
 	getEvent,
 	getResults,
+	getResult,
 	getResultsAthlete,
 	getTrek,
 	getWebcam,
@@ -44,7 +45,8 @@ router.post('/trails', getTrails);
 router.get('/trail', getAuth, getTrail);
 router.get('/events', getEvents);
 router.get('/event/:eventId', getEvent);
-router.get('/results', getResults);
+router.get('/results/:eventId', getResults);
+router.get('/result/:resultId', getResult);
 router.get('/athlete/results', getResultsAthlete);
 router.get('/gettrek', getTrek);
 router.get('/webcam/:numberCam', getWebcam);
