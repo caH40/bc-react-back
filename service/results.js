@@ -36,6 +36,17 @@ export async function getResultService(resultId) {
 		throw 'Непредвиденная ошибка на сервере. getTrailsService()';
 	}
 }
+export async function postResultService(resultForm) {
+	try {
+		const _id = resultForm._id;
+		delete resultForm._id;
+		await Result.findOneAndUpdate({ _id }, { $set: resultForm });
+		return { message: 'Сохранены изменения в результате заезда' };
+	} catch (error) {
+		console.log(error);
+		throw 'Непредвиденная ошибка на сервере. postResultService()';
+	}
+}
 
 export async function getResultsAthleteService(athlete, userId) {
 	try {

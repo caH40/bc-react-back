@@ -3,6 +3,7 @@ import {
 	getResultsAthleteService,
 	getResultsService,
 	getResultService,
+	postResultService,
 } from '../service/results.js';
 import {
 	deleteTrailService,
@@ -111,6 +112,19 @@ export async function getResult(req, res) {
 		const { resultId } = req.params;
 		const result = await getResultService(resultId);
 		res.status(200).json(result);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+
+export async function postResult(req, res) {
+	try {
+		const { resultForm } = req.body;
+		const resultResponse = await postResultService(resultForm);
+		res.status(200).json(resultResponse);
 	} catch (error) {
 		console.log(error);
 		return res
