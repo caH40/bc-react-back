@@ -79,9 +79,12 @@ export async function getResultsAthleteService(athlete, userId) {
 
 		// const time = new Date().getTime();
 		for (let i = 0; i < results.length; i++) {
-			const { eventName, eventDate } = await Event.findOne({ _id: results[i].eventId });
+			const { eventName, eventDate, segmentStrava } = await Event.findOne({
+				_id: results[i].eventId,
+			});
 			results[i].eventName = eventName;
 			results[i].eventDate = eventDate;
+			results[i].segmentStrava = segmentStrava;
 		}
 		// console.log(new Date().getTime() - time);
 		return { message: `Результаты заездов спортсмена ${athlete}`, data: results };
