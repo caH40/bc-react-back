@@ -60,7 +60,7 @@ export async function postAddResultService(resultForm) {
 
 export async function deleteResultService(resultId) {
 	try {
-		await Result.findOneAndDelete(resultId);
+		await Result.findOneAndDelete({ _id: resultId });
 		return { message: 'Удален результат соревнования!' };
 	} catch (error) {
 		console.log(error);
