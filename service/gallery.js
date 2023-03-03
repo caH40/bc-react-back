@@ -5,6 +5,15 @@ import { Gallery } from '../Model/Gallery.js';
 
 const __dirname = path.resolve();
 
+export async function getGalleriesService() {
+	try {
+		const galleriesDB = await Gallery.find();
+		return { message: 'Галереи', galleries: galleriesDB };
+	} catch (error) {
+		throw error;
+	}
+}
+
 export async function postGalleryService(form, userId) {
 	try {
 		const newDir = path.resolve(__dirname, 'build/images/gallery', form.nameDir);
@@ -29,7 +38,7 @@ export async function postGalleryService(form, userId) {
 		const galleryDB = await Gallery.create({
 			name: form.name,
 			date: Date.now(),
-			urlCover: `images/gallery/${form.nameDir}-cover/${form.nameDir}-cover.jpg`,
+			urlCover: `images/gallery/${form.nameDir}/${form.nameDir}-cover.jpg`,
 			urlGallery: `images/gallery/${form.nameDir}-cover/`,
 			creatorId: userId,
 		});

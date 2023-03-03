@@ -41,7 +41,7 @@ import {
 import { authModerator, authAdmin } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
 import { checkAuth, getAuth } from '../middleware/auth.js';
-import { postGallery } from '../controllers/controller-gallery.js';
+import { postGallery, getGalleries } from '../controllers/controller-gallery.js';
 
 export const router = new Router();
 
@@ -81,5 +81,5 @@ router.delete('/user-delete', authAdmin, deleteUser);
 router.post('/protocol', authAdmin, postProtocol);
 router.delete('/event', authAdmin, deleteProtocol);
 router.post('/event', authAdmin, postEvent);
-router.get('/gallery');
+router.get('/galleries', getGalleries);
 router.post('/gallery/create', authAdmin, postGallery);
