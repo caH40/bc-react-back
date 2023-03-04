@@ -41,7 +41,12 @@ import {
 import { authModerator, authAdmin } from '../middleware/authModerator.js';
 import { uploadFileTrek } from '../middleware/file-trek.js';
 import { checkAuth, getAuth } from '../middleware/auth.js';
-import { postGallery, getGalleries, postAlbum } from '../controllers/controller-gallery.js';
+import {
+	postGallery,
+	getGalleries,
+	getAlbums,
+	postAlbum,
+} from '../controllers/controller-gallery.js';
 
 export const router = new Router();
 
@@ -84,4 +89,5 @@ router.post('/event', authAdmin, postEvent);
 
 router.get('/galleries', getGalleries);
 router.post('/gallery/create', authAdmin, postGallery);
+router.get('/gallery/albums', getAlbums);
 router.post('/gallery/album/create', authAdmin, postAlbum);

@@ -39,7 +39,7 @@ export async function postGalleryService(form, userId) {
 		const galleryDB = await Gallery.create({
 			name: form.name,
 			date: Date.now(),
-			urlCover: `images/gallery/${form.nameDir}/${form.nameDir}-cover.jpg`,
+			urlCover: `images/gallery/${form.nameDir}/gallery-cover.jpg`,
 			urlGallery: `images/gallery/${form.nameDir}/`,
 			creatorId: userId,
 		});
@@ -47,6 +47,17 @@ export async function postGalleryService(form, userId) {
 		if (!galleryDB) throw 'Ошибка при сохранении в БД';
 
 		return { message: `Данные сохранены` };
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function getAlbumsService() {
+	try {
+		const albumsDB = await Album.find()
+			.populate({ path: 'creatorId', select: 'username' })
+			.populate({ path: 'galleryId', select: 'name' });
+		return { message: 'Альбомы', albums: albumsDB };
 	} catch (error) {
 		throw error;
 	}
@@ -71,18 +82,18 @@ export async function postAlbumService(form, userId) {
 				fit: sharp.fit.cover,
 			})
 			.toFormat('jpeg')
-			.toFile(path.resolve(__dirname, newDir, `${form.nameDir}-album-cover.jpg`));
+			.toFile(path.resolve(__dirname, newDir, `album-cover.jpg`));
 
 		const albumDB = await Album.create({
 			galleryId: form.galleryId,
 			name: form.name,
+			description: form.description,
 			date: Date.now(),
 			urlCover: `${galleryDB.urlGallery}${form.nameDir}/album-cover.jpg`,
 			urlAlbum: `${galleryDB.urlGallery}${form.nameDir}/`,
 			creatorId: userId,
 		});
-		console.log(albumDB);
-		if (!galleryDB) throw 'Ошибка при сохранении в БД';
+		if (!albumDB) throw 'Ошибка при сохранении в БД';
 
 		return { message: `Данные сохранены` };
 	} catch (error) {
