@@ -32,9 +32,7 @@ export async function postGalleryService(form, userId) {
 				fit: sharp.fit.cover,
 			})
 			.toFormat('jpeg')
-			.toFile(
-				path.resolve(__dirname, 'build/images/gallery', form.nameDir, `${form.nameDir}-cover.jpg`)
-			);
+			.toFile(path.resolve(__dirname, 'build/images/gallery', form.nameDir, `gallery-cover.jpg`));
 
 		const galleryDB = await Gallery.create({
 			name: form.name,
@@ -52,9 +50,9 @@ export async function postGalleryService(form, userId) {
 	}
 }
 
-export async function getAlbumsService() {
+export async function getAlbumsService(galleryId) {
 	try {
-		const albumsDB = await Album.find()
+		const albumsDB = await Album.find({ galleryId })
 			.populate({ path: 'creatorId', select: 'username' })
 			.populate({ path: 'galleryId', select: 'name' });
 		return { message: 'Альбомы', albums: albumsDB };

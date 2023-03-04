@@ -31,7 +31,8 @@ export async function postGallery(req, res) {
 }
 export async function getAlbums(req, res) {
 	try {
-		const galleries = await getAlbumsService();
+		const { galleryId } = req.params;
+		const galleries = await getAlbumsService(galleryId);
 		res.status(200).json(galleries);
 	} catch (error) {
 		console.log(error);

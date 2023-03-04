@@ -89,5 +89,5 @@ router.post('/event', authAdmin, postEvent);
 
 router.get('/galleries', getGalleries);
 router.post('/gallery/create', authAdmin, postGallery);
-router.get('/gallery/albums', getAlbums);
+router.get('/gallery/albums/:galleryId', getAlbums);
 router.post('/gallery/album/create', authAdmin, postAlbum);
