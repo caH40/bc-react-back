@@ -2,13 +2,15 @@ import mongoose from 'mongoose';
 import prk from 'mongoose';
 const { Schema, model } = prk;
 
-const imagesAlbumSchema = new Schema({
+const photoAlbumSchema = new Schema({
 	albumsId: { type: mongoose.Schema.Types.ObjectId, ref: 'Albums' },
-	urlImage: String,
+	urlPhotoSmall: String,
+	urlPhotoMedium: String,
+	urlPhotoNormal: String,
 	date: Number,
-	description: String,
-	name: String,
+	authorPhoto: String,
+	urlAuthorPhoto: String,
 	creatorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
-export const ImagesAlbum = model('ImagesAlbum', imagesAlbumSchema);
+export const PhotoAlbum = model('PhotoAlbum', photoAlbumSchema);

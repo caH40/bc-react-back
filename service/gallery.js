@@ -1,8 +1,11 @@
 import path from 'path';
 import sharp from 'sharp';
 import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+
 import { Gallery } from '../Model/Gallery.js';
 import { Album } from '../Model/Album.js';
+import { PhotoAlbum } from '../Model/photoAlbum.js';
 
 const __dirname = path.resolve();
 
@@ -91,6 +94,64 @@ export async function postAlbumService(form, userId) {
 			urlAlbum: `${galleryDB.urlGallery}${form.nameDir}/`,
 			creatorId: userId,
 		});
+		if (!albumDB) throw 'Ошибка при сохранении в БД';
+
+		return { message: `Данные сохранены` };
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function postPhotosService(form, userId) {
+	try {
+		const options = [
+			{
+				width: 320,
+				height: 213,
+				fit: sharp.fit.cover,
+				sizeName: 'small',
+			},
+			{
+				width: 800,
+				height: 533,
+				fit: sharp.fit.cover,
+				sizeName: 'medium',
+			},
+			{
+				width: 1600,
+				height: 1066,
+				fit: sharp.fit.cover,
+				sizeName: 'normal',
+			},
+		];
+		const albumDB = await Album.findOne({ _id: form.albumId });
+
+		for (let source of form.sources) {
+			let base64Image = source.source.split(';base64,').pop();
+			let myBuffer = Buffer.from(base64Image, 'base64');
+
+			let fileName = `${uuidv4()}`;
+
+			for (let option of options) {
+				await sharp(myBuffer)
+					.resize(option)
+					.toFormat('jpeg')
+					.toFile(
+						path.resolve(__dirname, 'build', albumDB.urlAlbum, `${fileName}-${option.sizeName}.jpg`)
+					);
+			}
+
+			let photoDB = await PhotoAlbum.create({
+				albumsId: form.albumId,
+				authorPhoto: form.authorPhoto,
+				urlAuthorPhoto: form.urlAuthorPhoto,
+				date: Date.now(),
+				urlPhotoSmall: `${albumDB.urlAlbum}${fileName}-small.jpg`,
+				urlPhotoMedium: `${albumDB.urlAlbum}${fileName}-medium.jpg`,
+				urlPhotoNormal: `${albumDB.urlAlbum}${fileName}-normal.jpg`,
+				creatorId: userId,
+			});
+		}
 		if (!albumDB) throw 'Ошибка при сохранении в БД';
 
 		return { message: `Данные сохранены` };
