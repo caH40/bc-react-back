@@ -167,3 +167,41 @@ export async function getPhotosService(albumId) {
 		throw error;
 	}
 }
+export async function deleteGalleryService(galleryId) {
+	try {
+		const galleryDB = await Gallery.findOneAndDelete({ _id: galleryId });
+		fs.rmSync(path.resolve(__dirname, 'build', galleryDB.urlGallery), { recursive: true });
+		const albumsDB = await Album.find({ galleryId });
+		for (let album of albumsDB) {
+			await PhotoAlbum.deleteMany({ albumId: album._id });
+		}
+		await Album.deleteMany({ galleryId });
+		return { message: 'Галерея удалена' };
+	} catch (error) {
+		throw error;
+	}
+}
+export async function deleteAlbumService(albumId) {
+	try {
+		const albumDB = await Album.findOneAndDelete({ _id: albumId });
+		fs.rmSync(path.resolve(__dirname, 'build', albumDB.urlAlbum), { recursive: true });
+		await PhotoAlbum.deleteMany({ albumId });
+		return { message: 'Альбом удален' };
+	} catch (error) {
+		throw error;
+	}
+}
+export async function deletePhotoService(photoId) {
+	try {
+		const photoDB = await PhotoAlbum.findOneAndDelete({ _id: photoId });
+		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
+		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoMedium));
+		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoNormal));
+		const photosDB = await PhotoAlbum.find({ albumId: photoDB.albumId })
+			.populate({ path: 'creatorId', select: 'username' })
+			.populate({ path: 'albumId', select: 'name' });
+		return { message: 'Фотография удалена', photos: photosDB };
+	} catch (error) {
+		throw error;
+	}
+}
