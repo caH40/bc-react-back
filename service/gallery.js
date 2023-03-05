@@ -52,7 +52,6 @@ export async function postGalleryService(form, userId) {
 		throw error;
 	}
 }
-
 export async function getAlbumsService(galleryId) {
 	try {
 		const albumsDB = await Album.find({ galleryId })
@@ -63,7 +62,6 @@ export async function getAlbumsService(galleryId) {
 		throw error;
 	}
 }
-
 export async function postAlbumService(form, userId) {
 	try {
 		const galleryDB = await Gallery.findOne({ _id: form.galleryId });
@@ -142,7 +140,7 @@ export async function postPhotosService(form, userId) {
 			}
 
 			let photoDB = await PhotoAlbum.create({
-				albumsId: form.albumId,
+				albumId: form.albumId,
 				authorPhoto: form.authorPhoto,
 				urlAuthorPhoto: form.urlAuthorPhoto,
 				date: Date.now(),
@@ -155,6 +153,16 @@ export async function postPhotosService(form, userId) {
 		if (!albumDB) throw 'Ошибка при сохранении в БД';
 
 		return { message: `Данные сохранены` };
+	} catch (error) {
+		throw error;
+	}
+}
+export async function getPhotosService(albumId) {
+	try {
+		const photosDB = await PhotoAlbum.find({ albumId })
+			.populate({ path: 'creatorId', select: 'username' })
+			.populate({ path: 'albumId', select: 'name' });
+		return { message: 'Альбомы', photos: photosDB };
 	} catch (error) {
 		throw error;
 	}

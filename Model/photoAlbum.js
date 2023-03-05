@@ -3,7 +3,7 @@ import prk from 'mongoose';
 const { Schema, model } = prk;
 
 const photoAlbumSchema = new Schema({
-	albumsId: { type: mongoose.Schema.Types.ObjectId, ref: 'Albums' },
+	albumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' },
 	urlPhotoSmall: String,
 	urlPhotoMedium: String,
 	urlPhotoNormal: String,
