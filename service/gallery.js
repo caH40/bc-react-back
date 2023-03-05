@@ -194,11 +194,13 @@ export async function deleteAlbumService(albumId) {
 export async function deletePhotoService(photoId) {
 	try {
 		const photoDB = await PhotoAlbum.findOneAndDelete({ _id: photoId });
-		console.log(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
 		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
 		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoMedium));
 		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoNormal));
-		return { message: 'Фотография удалена' };
+		const photosDB = await PhotoAlbum.find({ albumId: photoDB.albumId })
+			.populate({ path: 'creatorId', select: 'username' })
+			.populate({ path: 'albumId', select: 'name' });
+		return { message: 'Фотография удалена', photos: photosDB };
 	} catch (error) {
 		throw error;
 	}
