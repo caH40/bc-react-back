@@ -27,3 +27,5 @@ webcam*.jpg
 
 build/images/news/*
 !build/images/news/.gitkeep
+build/images/gallery/*
+!build/images/gallery/.gitkeep
