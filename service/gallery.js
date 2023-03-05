@@ -181,21 +181,24 @@ export async function deleteGalleryService(galleryId) {
 		throw error;
 	}
 }
-async function deletePhoto(photoId) {
+export async function deleteAlbumService(albumId) {
+	try {
+		const albumDB = await Album.findOneAndDelete({ _id: albumId });
+		fs.rmSync(path.resolve(__dirname, 'build', albumDB.urlAlbum), { recursive: true });
+		await PhotoAlbum.deleteMany({ albumId });
+		return { message: 'Альбом удален' };
+	} catch (error) {
+		throw error;
+	}
+}
+export async function deletePhotoService(photoId) {
 	try {
 		const photoDB = await PhotoAlbum.findOneAndDelete({ _id: photoId });
 		console.log(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
 		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
 		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoMedium));
 		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoNormal));
-	} catch (error) {
-		throw error;
-	}
-}
-async function deleteAlbum(albumId) {
-	try {
-		const albumDB = await Album.findOneAndDelete({ _id: albumId });
-		fs.rmSync(path.resolve(__dirname, 'build', albumDB.urlAlbum), { recursive: true });
+		return { message: 'Фотография удалена' };
 	} catch (error) {
 		throw error;
 	}
