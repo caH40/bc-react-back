@@ -48,6 +48,7 @@ import {
 	postAlbum,
 	postPhotos,
 	getPhotos,
+	deleteGallery,
 } from '../controllers/controller-gallery.js';
 
 export const router = new Router();
@@ -95,3 +96,4 @@ router.get('/gallery/albums/:galleryId', getAlbums);
 router.post('/gallery/album/create', authAdmin, postAlbum);
 router.post('/gallery/photos', authAdmin, postPhotos);
 router.get('/gallery/photos/:albumId', getPhotos);
+router.delete('/gallery', authAdmin, deleteGallery);

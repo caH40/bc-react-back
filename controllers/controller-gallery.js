@@ -5,6 +5,7 @@ import {
 	getAlbumsService,
 	postPhotosService,
 	getPhotosService,
+	deleteGalleryService,
 } from '../service/gallery.js';
 
 export async function getGalleries(req, res) {
@@ -74,6 +75,18 @@ export async function getPhotos(req, res) {
 		const { albumId } = req.params;
 		const photos = await getPhotosService(albumId);
 		res.status(200).json(photos);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: typeof error !== 'string' ? 'Непредвиденная ошибка на сервере' : error });
+	}
+}
+export async function deleteGallery(req, res) {
+	try {
+		const { galleryId } = req.body;
+		const gallery = await deleteGalleryService(galleryId);
+		res.status(200).json(gallery);
 	} catch (error) {
 		console.log(error);
 		return res

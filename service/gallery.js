@@ -167,3 +167,36 @@ export async function getPhotosService(albumId) {
 		throw error;
 	}
 }
+export async function deleteGalleryService(galleryId) {
+	try {
+		const galleryDB = await Gallery.findOneAndDelete({ _id: galleryId });
+		fs.rmSync(path.resolve(__dirname, 'build', galleryDB.urlGallery), { recursive: true });
+		const albumsDB = await Album.find({ galleryId });
+		for (let album of albumsDB) {
+			await PhotoAlbum.deleteMany({ albumId: album._id });
+		}
+		await Album.deleteMany({ galleryId });
+		return { message: 'Галерея удалена' };
+	} catch (error) {
+		throw error;
+	}
+}
+async function deletePhoto(photoId) {
+	try {
+		const photoDB = await PhotoAlbum.findOneAndDelete({ _id: photoId });
+		console.log(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
+		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoSmall));
+		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoMedium));
+		fs.unlinkSync(path.resolve(__dirname, 'build', photoDB.urlPhotoNormal));
+	} catch (error) {
+		throw error;
+	}
+}
+async function deleteAlbum(albumId) {
+	try {
+		const albumDB = await Album.findOneAndDelete({ _id: albumId });
+		fs.rmSync(path.resolve(__dirname, 'build', albumDB.urlAlbum), { recursive: true });
+	} catch (error) {
+		throw error;
+	}
+}
