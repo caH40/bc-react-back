@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/813.1699468c.chunk.css","mappings":"AAAA,oBAEC,eAAgB,CAChB,6BAA8B,CAF9B,UAGD","sources":["Pages/PagesCss/AdminBG.module.css"],"sourcesContent":[".img {\r\n\twidth: 100%;\r\n\tobject-fit: fill;\r\n\tobject-position: center center;\r\n}\r\n"],"names":[],"sourceRoot":""}
