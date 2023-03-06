@@ -11,9 +11,12 @@ const __dirname = path.resolve();
 
 export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 	try {
+		// const start = Date.now();
 		const cardsDB = await Card.find({ $and: [{ state: filter, bikeType: filter }] }).populate(
 			'kudoses'
 		);
+		// const finish = Date.now();
+		// console.log((finish - start) / 1000);
 		const quantityPages = Math.ceil(cardsDB.length / cardsOnPage);
 
 		const cardsSorted = sortCards(sort, cardsDB);
@@ -29,6 +32,7 @@ export async function getTrailsService(filter, sort, cardsOnPage, page = 1) {
 			let likes = card[i].kudoses.usersIdLike.length - card[i].kudoses.usersIdDisLike.length;
 			card[i].likes = likes;
 		}
+
 		return { message: 'Карточки маршрутов получены', data: { cards: card, quantityPages } };
 	} catch (error) {
 		console.log(error);
